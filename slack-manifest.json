@@ -1,0 +1,35 @@
+{
+  "display_information": {
+    "name": "Drinking Bird",
+    "description": "Presses Y so you don't have to.",
+    "background_color": "#b3261e"
+  },
+  "oauth_config": {
+    "scopes": {
+      "user": [
+        "chat:write",
+        "im:history",
+        "mpim:history",
+        "channels:history",
+        "groups:history",
+        "users:read"
+      ]
+    }
+  },
+  "settings": {
+    "event_subscriptions": {
+      "user_events": [
+        "message.im",
+        "message.mpim",
+        "message.channels",
+        "message.groups"
+      ]
+    },
+    "interactivity": {
+      "is_enabled": false
+    },
+    "org_deploy_enabled": false,
+    "socket_mode_enabled": true,
+    "token_rotation_enabled": false
+  }
+}

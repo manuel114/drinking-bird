@@ -1,0 +1,26 @@
+{
+  "name": "drinking-bird",
+  "version": "0.1.0",
+  "description": "A drinking bird for your Slack. It presses Y so you don't have to.",
+  "license": "MIT",
+  "type": "module",
+  "engines": {
+    "node": ">=20.12"
+  },
+  "scripts": {
+    "start": "tsx src/cli.ts start",
+    "dry-run": "tsx src/cli.ts start --dry-run",
+    "demo": "tsx src/cli.ts demo",
+    "test": "tsx --test test/*.test.ts",
+    "check-types": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@slack/socket-mode": "^2.0.4",
+    "@slack/web-api": "^7.8.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22.15.3",
+    "tsx": "^4.19.2",
+    "typescript": "^5.8.2"
+  }
+}
