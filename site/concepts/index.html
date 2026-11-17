@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Drinking Bird — style options</title>
+<style>
+  body { margin:0; padding:32px 16px 64px; background:#15161a; color:#e8e8ea; font:16px/1.5 system-ui, sans-serif; }
+  main { max-width:1040px; margin:0 auto; }
+  h1 { font-size:28px; margin:0 0 4px; }
+  h2 { font-size:18px; margin:40px 0 4px; }
+  p { margin:0 0 12px; color:#a5a7ae; max-width:70ch; }
+  /* Each frame is designed at 1440x900 and shown scaled down. */
+  .frame { width:1008px; max-width:100%; aspect-ratio:1440/900; overflow:hidden; border-radius:8px; border:1px solid #2c2e36; }
+  .frame iframe { width:1440px; height:900px; border:0; transform:scale(.7); transform-origin:0 0; }
+</style>
+</head>
+<body>
+<main>
+  <h1>Drinking Bird: style options</h1>
+  <p>Three new directions for the landing page hero. The current green-monitor page is at <a style="color:#7dff9b" href="../index.html">../index.html</a>.</p>
+
+  <h2>A. Saturday-morning control room</h2>
+  <p>Leans on the cartoon. Thick outlines, flat colour, a console wall. The bird is the star and the tone is friendly.</p>
+  <div class="frame"><iframe src="a-cartoon.html" title="Style A"></iframe></div>
+
+  <h2>B. Box art</h2>
+  <p>Leans on the game. A panel collage like a game box, with the bird as the cover hero.</p>
+  <div class="frame"><iframe src="b-cover.html" title="Style B"></iframe></div>
+
+  <h2>C. Mission passed</h2>
+  <p>The in-game screen. Wanted stars, a minimap that points at the sofa, and the bird's reply as a subtitle.</p>
+  <div class="frame"><iframe src="c-hud.html" title="Style C"></iframe></div>
+</main>
+</body>
+</html>

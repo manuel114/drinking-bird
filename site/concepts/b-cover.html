@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Style B — Box art</title>
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Archivo:wght@500;700&family=Permanent+Marker&display=swap" rel="stylesheet">
+<style>
+  :root { --ink:#0c0a10; --paper:#fbf4e6; --pink:#ff3d8b; --orange:#ff9a3d; --teal:#12c2b6; --yellow:#ffe14a; }
+  * { box-sizing:border-box; }
+  body { margin:0; width:1440px; height:900px; overflow:hidden; background:var(--ink); font:500 20px/1.4 "Archivo", system-ui, sans-serif; color:var(--paper); }
+  /* The classic box-art collage: uneven panels, thick gutters. */
+  .grid { position:absolute; inset:18px; display:grid; gap:12px;
+          grid-template-columns: 1.15fr 1fr 1fr 1.05fr; grid-template-rows: 1fr .9fr 1fr;
+          grid-template-areas: "hero sofa sofa copy" "hero title title copy" "hero office y cta"; }
+  .panel { position:relative; overflow:hidden; background-color:#241a2e; background-size:cover; background-position:center; border:3px solid var(--paper); }
+  .hero   { grid-area:hero;   background-image:linear-gradient(to top, rgba(12,10,16,.55), transparent 40%), url("img/bird-cover.jpg"); }
+  .sofa   { grid-area:sofa;   background-image:url("img/panel-sofa.jpg"); }
+  .office { grid-area:office; background-image:url("img/panel-office.jpg"); }
+  .title  { grid-area:title;  background:var(--ink); display:flex; flex-direction:column; justify-content:center; align-items:center; text-align:center; border-width:6px; }
+  .copy   { grid-area:copy;   background:linear-gradient(180deg, var(--pink), var(--orange)); color:var(--ink); padding:30px 28px; display:flex; flex-direction:column; justify-content:flex-end; }
+  .y      { grid-area:y;      background:var(--teal); display:grid; place-items:center; }
+  .cta    { grid-area:cta;    background:var(--yellow); color:var(--ink); padding:22px 24px; display:flex; flex-direction:column; justify-content:center; }
+
+  .title h1 { margin:0; font:400 118px/.9 "Anton", sans-serif; letter-spacing:.01em; color:var(--paper); text-transform:uppercase; }
+  .title .six { font:400 54px/1 "Permanent Marker", cursive; color:var(--pink); transform:rotate(-4deg); margin-top:2px; }
+  .copy h2 { margin:0 0 12px; font:400 50px/.95 "Anton", sans-serif; text-transform:uppercase; }
+  .copy p { margin:0; font-weight:500; }
+  .key { width:150px; height:150px; border-radius:22px; background:var(--paper); color:var(--ink); border:6px solid var(--ink); box-shadow:0 12px 0 var(--ink); display:grid; place-items:center; font:400 110px/1 "Anton", sans-serif; }
+  .cta .label { font-size:14px; font-weight:700; letter-spacing:.14em; text-transform:uppercase; margin-bottom:8px; }
+  .cta code { font:700 17px/1.35 ui-monospace, Menlo, monospace; }
+  .stamp { position:absolute; left:18px; bottom:18px; font:400 30px/1 "Permanent Marker", cursive; color:var(--yellow); transform:rotate(-3deg); text-shadow:2px 2px 0 var(--ink); }
+  .rating { position:absolute; right:14px; bottom:14px; background:var(--paper); color:var(--ink); border:3px solid var(--ink); padding:6px 10px; font:400 22px/1 "Anton", sans-serif; text-align:center; }
+  .rating small { display:block; font:700 9px/1.2 "Archivo", sans-serif; letter-spacing:.08em; }
+</style>
+</head>
+<body>
+  <div class="grid">
+    <div class="panel hero" role="img" aria-label="The drinking bird as a box-art hero at sunset">
+      <div class="stamp">out sick.<br>totally.</div>
+    </div>
+    <div class="panel sofa" role="img" aria-label="Hands on a controller in front of a neon sunset"></div>
+    <div class="panel title">
+      <h1>Drinking Bird</h1>
+      <div class="six">launch day edition</div>
+    </div>
+    <div class="panel copy">
+      <h2>GTA VI is out. You have a job.</h2>
+      <p>The bird answers your Slack with plausible, non-committal replies while you are &ldquo;working from home&rdquo;.</p>
+    </div>
+    <div class="panel office" role="img" aria-label="An empty office where a drinking bird pecks a keyboard">
+      <div class="rating">Y<small>FOR YES</small></div>
+    </div>
+    <div class="panel y"><div class="key">Y</div></div>
+    <div class="panel cta">
+      <div class="label">Paste into your coding agent</div>
+      <code>Clone github.com/manuel114/drinking-bird and set it up for me.</code>
+    </div>
+  </div>
+</body>
+</html>
