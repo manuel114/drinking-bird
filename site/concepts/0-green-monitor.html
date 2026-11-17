@@ -1,0 +1,354 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Drinking Bird — covers your Slack on GTA VI launch day</title>
+<meta name="description" content="GTA VI is out on 19 November 2026. Drinking Bird answers your Slack while you are 'working from home'.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;700&family=VT323&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0b120e;
+    --panel: #111c15;
+    --line: #23382a;
+    --phosphor: #7dff9b;
+    --phosphor-dim: #3f9a58;
+    --ink: #dfe8d9;
+    --muted: #8fa394;
+    --bird: #e23b2e;
+    --hat: #f6c61a;
+    --desk: #6b4a2b;
+  }
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--ink);
+    font: 400 16px/1.6 "IBM Plex Mono", ui-monospace, Menlo, monospace;
+    -webkit-font-smoothing: antialiased;
+  }
+  /* Faint CRT scanlines over the whole page. */
+  body::before {
+    content: "";
+    position: fixed; inset: 0; pointer-events: none; z-index: 10;
+    background: repeating-linear-gradient(to bottom, transparent 0 2px, rgba(0,0,0,.14) 2px 3px);
+  }
+  a { color: var(--phosphor); }
+  .wrap { max-width: 1080px; margin: 0 auto; padding: 0 16px; }
+  .display { font-family: "VT323", monospace; font-weight: 400; line-height: .95; letter-spacing: .01em; }
+
+  header.bar {
+    display: flex; justify-content: space-between; align-items: center; gap: 16px;
+    padding: 16px 0; font-size: 13px; color: var(--muted);
+  }
+  .bar .status::before {
+    content: ""; display: inline-block; width: 9px; height: 9px; border-radius: 50%;
+    background: var(--phosphor); margin-right: 8px; box-shadow: 0 0 8px var(--phosphor);
+  }
+
+  .hero { display: grid; grid-template-columns: 1.05fr 1fr; gap: 40px; align-items: center; padding: 32px 0 72px; }
+  .hero h1 { font-size: clamp(64px, 11vw, 136px); margin: 0 0 8px; color: var(--phosphor); text-shadow: 0 0 22px rgba(125,255,155,.35); }
+  .hero .tag { font-size: clamp(26px, 3.4vw, 38px); margin: 0 0 20px; color: var(--hat); }
+  .hero p { max-width: 46ch; margin: 0 0 24px; color: var(--ink); }
+  .countdown { font-size: 13px; color: var(--muted); margin-top: 20px; }
+  .countdown b { color: var(--hat); font-weight: 500; }
+
+  .cta {
+    border: 1px solid var(--line); background: var(--panel); border-radius: 6px; padding: 14px;
+    max-width: 520px;
+  }
+  .cta .label { font-size: 12px; text-transform: uppercase; letter-spacing: .12em; color: var(--muted); margin-bottom: 8px; }
+  .cta code { display: block; color: var(--phosphor); font-size: 14px; overflow-wrap: anywhere; }
+  .cta .row { display: flex; gap: 10px; margin-top: 12px; flex-wrap: wrap; }
+  button, .btn {
+    font: 500 14px "IBM Plex Mono", monospace; cursor: pointer; text-decoration: none;
+    padding: 9px 14px; border-radius: 4px; border: 1px solid var(--phosphor);
+    background: var(--phosphor); color: #06240f;
+  }
+  .btn.ghost { background: transparent; color: var(--phosphor); }
+  button:focus-visible, .btn:focus-visible { outline: 2px solid var(--hat); outline-offset: 2px; }
+
+  /* The monitor */
+  .crt {
+    background: #06100a; border: 10px solid #cfc7b0; border-bottom-width: 26px; border-radius: 14px;
+    padding: 14px 16px; min-height: 212px; position: relative;
+    box-shadow: inset 0 0 40px rgba(125,255,155,.08), 0 18px 0 -8px #a8a08a;
+    font-family: "VT323", monospace; font-size: 21px; line-height: 1.25; color: var(--phosphor);
+  }
+  .crt::after {
+    content: ""; position: absolute; right: 14px; bottom: -19px; width: 10px; height: 10px; border-radius: 50%;
+    background: var(--bird); box-shadow: 0 0 8px var(--bird);
+  }
+  .crt .line { margin: 0; white-space: pre-wrap; }
+  .crt .who { color: var(--phosphor-dim); }
+  .crt .me { color: var(--hat); }
+  .crt .alarm { color: var(--bird); }
+  .scene { display: block; width: 100%; height: auto; margin-top: -6px; }
+
+  .bird { transform-origin: 330px 230px; transform: rotate(-20deg); animation: dip 4s cubic-bezier(.45,0,.3,1) infinite; }
+  .ykey { animation: press 4s linear infinite; }
+  @keyframes dip {
+    0%, 30%  { transform: rotate(-20deg); }
+    48%, 54% { transform: rotate(-102deg); }
+    72%      { transform: rotate(-8deg); }
+    86%      { transform: rotate(-26deg); }
+    100%     { transform: rotate(-20deg); }
+  }
+  @keyframes press {
+    0%, 46%, 57%, 100% { transform: translateY(0); }
+    48%, 54% { transform: translateY(5px); }
+  }
+
+  section { padding: 56px 0; border-top: 1px dashed var(--line); }
+  h2 { font-size: clamp(40px, 6vw, 60px); margin: 0 0 24px; color: var(--phosphor); }
+  .steps { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; counter-reset: step; padding: 0; margin: 0; list-style: none; }
+  .steps li { background: var(--panel); border: 1px solid var(--line); border-radius: 6px; padding: 20px; counter-increment: step; }
+  .steps li::before { content: "0" counter(step); font: 400 44px/1 "VT323", monospace; color: var(--hat); display: block; margin-bottom: 8px; }
+  .steps h3, .modes h3 { margin: 0 0 6px; font-size: 16px; font-weight: 700; color: var(--ink); }
+  .steps p, .modes p { margin: 0; color: var(--muted); font-size: 14px; }
+
+  .modes { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+  .mode { background: var(--panel); border: 1px solid var(--line); border-radius: 6px; padding: 20px; }
+  .chat { margin-top: 14px; font-size: 14px; border-left: 2px solid var(--line); padding-left: 12px; }
+  .chat div { margin: 4px 0; }
+  .chat .them { color: var(--muted); }
+  .chat .you { color: var(--phosphor); }
+
+  .alarm-box { border: 2px solid var(--bird); border-radius: 6px; padding: 24px; background: repeating-linear-gradient(-45deg, rgba(226,59,46,.07) 0 14px, transparent 14px 28px); }
+  .alarm-box h2 { color: var(--bird); }
+  .alarm-box ul { margin: 0; padding-left: 20px; columns: 2; column-gap: 40px; }
+  .alarm-box li { margin-bottom: 8px; break-inside: avoid; }
+  .alarm-box p { max-width: 62ch; }
+
+  dl { margin: 0; display: grid; gap: 18px; max-width: 70ch; }
+  dt { color: var(--hat); font-weight: 500; }
+  dd { margin: 4px 0 0; color: var(--muted); }
+
+  footer { padding: 40px 0 64px; border-top: 1px dashed var(--line); color: var(--muted); font-size: 13px; }
+
+  @media (max-width: 820px) {
+    .hero { grid-template-columns: 1fr; padding-bottom: 48px; }
+    .steps, .modes { grid-template-columns: 1fr; }
+    .alarm-box ul { columns: 1; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .bird, .ykey { animation: none; }
+    html { scroll-behavior: auto; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="bar">
+    <span class="status">GTA VI LAUNCH DAY · WORKING FROM HOME</span>
+    <a href="https://github.com/manuel114/drinking-bird">GitHub</a>
+  </header>
+
+  <main>
+    <div class="hero">
+      <div>
+        <h1 class="display">DRINKING BIRD</h1>
+        <p class="display tag">Presses Y so you don't have to.</p>
+        <p>GTA VI is out on 19 November 2026. You have a job. Drinking Bird answers your Slack with plausible, non-committal replies while you are &ldquo;working from home&rdquo;. It is open source, it runs on your laptop, and it uses the coding agent you already have.</p>
+        <div class="cta">
+          <div class="label">To start, paste this into your coding agent</div>
+          <code id="prompt">Clone https://github.com/manuel114/drinking-bird, read AGENTS.md and set it up for me. Start with a dry run.</code>
+          <div class="row">
+            <button id="copy" type="button">Copy prompt</button>
+            <a class="btn ghost" href="https://github.com/manuel114/drinking-bird">Read the source</a>
+          </div>
+        </div>
+        <p class="countdown" id="countdown">GTA VI is out on 19 November 2026.</p>
+      </div>
+
+      <div aria-hidden="true">
+        <div class="crt" id="crt"></div>
+        <svg class="scene" viewBox="60 60 420 270" role="img">
+          <!-- desk -->
+          <rect x="60" y="302" width="420" height="14" fill="var(--desk)"/>
+          <rect x="60" y="316" width="420" height="6" fill="#4d3520"/>
+          <!-- keyboard -->
+          <rect x="110" y="290" width="190" height="12" rx="2" fill="#cfc7b0"/>
+          <g fill="#a8a08a">
+            <rect x="118" y="284" width="22" height="8" rx="1.5"/>
+            <rect x="144" y="284" width="22" height="8" rx="1.5"/>
+            <rect x="170" y="284" width="22" height="8" rx="1.5"/>
+            <rect x="196" y="284" width="10" height="8" rx="1.5"/>
+            <rect x="238" y="284" width="30" height="8" rx="1.5"/>
+            <rect x="272" y="284" width="22" height="8" rx="1.5"/>
+          </g>
+          <g class="ykey">
+            <rect x="209" y="281" width="26" height="11" rx="2" fill="var(--hat)"/>
+            <text x="222" y="290.5" text-anchor="middle" font-family="VT323, monospace" font-size="12" fill="#3a2e00">Y</text>
+          </g>
+          <!-- stand -->
+          <g stroke="var(--bird)" stroke-width="7" stroke-linecap="round" fill="none">
+            <path d="M330 230 L304 298"/>
+            <path d="M330 230 L358 298"/>
+          </g>
+          <ellipse cx="298" cy="300" rx="16" ry="5" fill="var(--hat)"/>
+          <ellipse cx="364" cy="300" rx="16" ry="5" fill="var(--hat)"/>
+          <!-- bird: drawn upright, rotated around the pivot -->
+          <g class="bird">
+            <line x1="330" y1="118" x2="330" y2="286" stroke="#e8f3ff" stroke-width="6" stroke-linecap="round" opacity=".85"/>
+            <line x1="330" y1="200" x2="330" y2="286" stroke="var(--bird)" stroke-width="3" stroke-linecap="round"/>
+            <circle cx="330" cy="290" r="21" fill="var(--bird)"/>
+            <circle cx="323" cy="283" r="6" fill="#fff" opacity=".25"/>
+            <circle cx="330" cy="110" r="18" fill="var(--bird)"/>
+            <path d="M316 104 L296 110 L316 118 Z" fill="var(--hat)"/>
+            <circle cx="323" cy="105" r="3" fill="#1a0b09"/>
+            <rect x="315" y="74" width="30" height="20" rx="2" fill="var(--hat)"/>
+            <rect x="307" y="91" width="46" height="5" rx="2" fill="var(--hat)"/>
+          </g>
+          <circle cx="330" cy="230" r="6" fill="#cfc7b0"/>
+        </svg>
+      </div>
+    </div>
+
+    <section>
+      <h2 class="display">HOW IT WORKS</h2>
+      <ol class="steps">
+        <li>
+          <h3>You hand it to your coding agent</h3>
+          <p>Claude Code, Codex, or anything that takes a prompt. It clones the repo, walks you through a two-minute Slack app, and starts the bird.</p>
+        </li>
+        <li>
+          <h3>The bird watches your Slack</h3>
+          <p>Direct messages and @mentions only. It waits 25 to 90 seconds, because nobody answers in 200 milliseconds, then replies as you.</p>
+        </li>
+        <li>
+          <h3>You play GTA VI</h3>
+          <p>If you put the controller down and type in a conversation yourself, the bird backs off. After eight hours it clocks off. It has better boundaries than you do.</p>
+        </li>
+      </ol>
+    </section>
+
+    <section>
+      <h2 class="display">TWO MODES</h2>
+      <div class="modes">
+        <div class="mode">
+          <h3>Y mode</h3>
+          <p>The original. Every message gets the same answer. Historically accurate, professionally fatal.</p>
+          <div class="chat">
+            <div class="them">dana: can you take the 4pm with legal?</div>
+            <div class="you">you: y</div>
+            <div class="them">dana: and own the migration?</div>
+            <div class="you">you: y</div>
+          </div>
+        </div>
+        <div class="mode">
+          <h3>Agent mode</h3>
+          <p>Your coding agent writes one short holding reply. It never agrees to a deadline, a meeting or a decision. It knows nothing and commits to less.</p>
+          <div class="chat">
+            <div class="them">dana: did you get a chance to look at the Q4 deck?</div>
+            <div class="you">you: haven't gotten to it yet, been swamped but will take a look soon</div>
+            <div class="them">sam: thoughts on the new onboarding flow?</div>
+            <div class="you">you: in the middle of something, will come back to this</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <div class="alarm-box">
+        <h2 class="display">REACTOR SAFETY</h2>
+        <p>The last time someone left a drinking bird in charge, it fell over and the core nearly melted. This bird knows its limits. For these messages it says nothing, rings a bell on your laptop and waits for a human:</p>
+        <ul>
+          <li>Anything urgent, on fire, or down</li>
+          <li>&ldquo;Quick call?&rdquo; and its relatives</li>
+          <li>&ldquo;Are you there?&rdquo;</li>
+          <li>&ldquo;Is this a bot?&rdquo;</li>
+          <li>&ldquo;Are you playing GTA?&rdquo;</li>
+          <li>Requests to approve, merge or sign off</li>
+          <li>Passwords, payments and other secrets</li>
+          <li>Anything with HR in it</li>
+          <li>The fourth message in an hour from the same person</li>
+        </ul>
+      </div>
+    </section>
+
+    <section>
+      <h2 class="display">QUESTIONS</h2>
+      <dl>
+        <div><dt>Is this a good idea?</dt><dd>No.</dd></div>
+        <div><dt>Why not just send a fake sick note?</dt><dd>Everyone on your team is sending one. Somebody has to look like they are at work. A sick note also runs out after a day, and the map does not.</dd></div>
+        <div><dt>Does it work after launch day?</dt><dd>Yes. It works any day. It was built for one.</dd></div>
+        <div><dt>Do you host it? Do you see my messages?</dt><dd>No. It runs on your machine, with a Slack app you create in your own workspace. There is no server. We could not read your messages if we wanted to, and we do not want to.</dd></div>
+        <div><dt>Does it keep my status dot green?</dt><dd>No. Slack decides that from real activity. The bird can answer for you. It cannot be you.</dd></div>
+        <div><dt>Will my colleagues notice?</dt><dd>Eventually. That is how the episode ends, too.</dd></div>
+        <div><dt>Can a colleague trick it with a clever message?</dt><dd>The agent runs with no tools, in an empty folder, and anything longer than one plain line is thrown away. They can at most make it say something vague, which is what it does anyway.</dd></div>
+        <div><dt>Will I get fired?</dt><dd>The licence says &ldquo;without warranty of any kind&rdquo;. That covers your job.</dd></div>
+      </dl>
+    </section>
+  </main>
+
+  <footer>
+    MIT licence. A fan joke. Not affiliated with or endorsed by Rockstar Games, Take-Two Interactive, any cartoon, or your employer. Grand Theft Auto and GTA are trademarks of their owner. A drinking bird is a real toy from 1945 and it is very patient.
+  </footer>
+</div>
+
+<script>
+  const copy = document.getElementById("copy");
+  copy.addEventListener("click", async () => {
+    try {
+      await navigator.clipboard.writeText(document.getElementById("prompt").textContent);
+      copy.textContent = "Copied. Go on then.";
+    } catch {
+      copy.textContent = "Select it by hand, sorry";
+    }
+  });
+
+  // Countdown to the 19th. After that, the page stops pretending.
+  const target = new Date(2026, 10, 19).getTime();
+  const countdown = document.getElementById("countdown");
+  function tick() {
+    const left = target - Date.now();
+    if (left <= 0) {
+      countdown.innerHTML = "<b>GTA VI is out.</b> Why are you reading a website?";
+      return;
+    }
+    const hours = Math.floor(left / 36e5);
+    const days = Math.floor(hours / 24);
+    countdown.innerHTML = `<b>${days}d ${hours % 24}h</b> until GTA VI. Your dentist appointment is confirmed.`;
+  }
+  tick();
+  setInterval(tick, 60000);
+
+  // The monitor shows the bird at work. A new message arrives with each swing; the reply lands on the dip.
+  const feed = [
+    ["dana", "did you see my PR?", "y"],
+    ["sam", "are we still on track for friday?", "y"],
+    ["priya", "can you own the migration?", "y"],
+    ["boss", "vent radioactive gas?", "y"],
+    ["dana", "PROD IS DOWN", null],
+    ["boss", "you are not playing GTA are you", null],
+    ["sam", "thanks, you're a star", "y"],
+  ];
+  const crt = document.getElementById("crt");
+  const bird = document.querySelector(".bird");
+  const still = matchMedia("(prefers-reduced-motion: reduce)").matches;
+  let index = 0;
+
+  function addLine(html) {
+    const line = document.createElement("p");
+    line.className = "line";
+    line.innerHTML = html;
+    crt.append(line);
+    while (crt.children.length > 7) crt.firstChild.remove();
+  }
+  function swing() {
+    const [who, text, reply] = feed[index++ % feed.length];
+    addLine(`<span class="who">${who}:</span> ${text}`);
+    setTimeout(() => {
+      addLine(reply ? `<span class="me">you:</span> ${reply}` : `<span class="alarm">!! ALARM. BIRD SILENT. HUMAN REQUIRED.</span>`);
+    }, still ? 0 : 1950);
+  }
+  addLine("TO START PRESS ANY KEY");
+  if (still) { swing(); swing(); swing(); }
+  else { swing(); bird.addEventListener("animationiteration", swing); }
+</script>
+</body>
+</html>
