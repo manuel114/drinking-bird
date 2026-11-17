@@ -3,13 +3,15 @@
 ```
         ___
       _( o )>     DRINKING BIRD
-     (_  __)      presses Y so you don't have to
+     (_  __)      covers your Slack on GTA VI launch day
        ||
       _||_
      /____\
 ```
 
-An open-source stand-in for your Slack. It answers your colleagues with plausible, non-committal replies while you are "working from home".
+GTA VI is out on 19 November 2026. You have a job.
+
+Drinking Bird is an open-source stand-in for your Slack. It answers your colleagues with plausible, non-committal replies while you are "working from home" and playing GTA VI.
 
 It is a joke. It also works.
 
@@ -82,6 +84,7 @@ The bird stays silent, rings the terminal bell and shows a notification (on macO
 - sounds urgent or like an incident
 - asks for a call, or asks where you are
 - asks whether you are a bot
+- mentions GTA, consoles or playing
 - asks you to approve, merge or sign off
 - mentions passwords, payments or other secrets
 - mentions HR
@@ -126,4 +129,4 @@ The landing page is one static file: [site/index.html](site/index.html).
 
 ## Licence
 
-MIT. Not affiliated with any game studio, any cartoon, or your employer. Whether you should deceive your colleagues is between you and them.
+MIT. A fan joke. Not affiliated with or endorsed by Rockstar Games, Take-Two Interactive, any cartoon, or your employer. Grand Theft Auto and GTA are trademarks of their owner. Whether you should deceive your colleagues is between you and them.

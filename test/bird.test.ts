@@ -41,6 +41,8 @@ test("raises the alarm instead of answering dangerous messages", () => {
     "can you approve the release",
     "what's the database password",
     "HR wants a word",
+    "you are not playing GTA are you",
+    "lol half the team is on the ps5 today",
   ];
   for (const text of dangerous) {
     assert.equal(triage(dm(text), context).action, "alarm", text);

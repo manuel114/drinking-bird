@@ -13,7 +13,7 @@ function stamp(): string {
 export const BANNER = `
         ___
       _( o )>     DRINKING BIRD
-     (_  __)      presses Y so you don't have to
+     (_  __)      covers your Slack on GTA VI launch day
        ||
       _||_        to start press any key
      /____\\       (you already did)

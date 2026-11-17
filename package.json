@@ -1,7 +1,7 @@
 {
   "name": "drinking-bird",
   "version": "0.1.0",
-  "description": "A drinking bird for your Slack. It presses Y so you don't have to.",
+  "description": "Covers your Slack on GTA VI launch day. A drinking bird that presses Y so you don't have to.",
   "license": "MIT",
   "type": "module",
   "engines": {

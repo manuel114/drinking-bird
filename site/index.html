@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Drinking Bird — presses Y so you don't have to</title>
-<meta name="description" content="An open-source stand-in for your Slack. It answers your colleagues while you are 'working from home'.">
+<title>Drinking Bird — covers your Slack on GTA VI launch day</title>
+<meta name="description" content="GTA VI is out on 19 November 2026. Drinking Bird answers your Slack while you are 'working from home'.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;700&family=VT323&display=swap" rel="stylesheet">
@@ -143,7 +143,7 @@
 <body>
 <div class="wrap">
   <header class="bar">
-    <span class="status">SECTOR 7-G · WORKING FROM HOME</span>
+    <span class="status">GTA VI LAUNCH DAY · WORKING FROM HOME</span>
     <a href="https://github.com/manuel114/drinking-bird">GitHub</a>
   </header>
 
@@ -152,7 +152,7 @@
       <div>
         <h1 class="display">DRINKING BIRD</h1>
         <p class="display tag">Presses Y so you don't have to.</p>
-        <p>An open-source stand-in for your Slack. It answers your colleagues with plausible, non-committal replies while you are &ldquo;working from home&rdquo;. It runs on your laptop and uses the coding agent you already have.</p>
+        <p>GTA VI is out on 19 November 2026. You have a job. Drinking Bird answers your Slack with plausible, non-committal replies while you are &ldquo;working from home&rdquo;. It is open source, it runs on your laptop, and it uses the coding agent you already have.</p>
         <div class="cta">
           <div class="label">To start, paste this into your coding agent</div>
           <code id="prompt">Clone https://github.com/manuel114/drinking-bird, read AGENTS.md and set it up for me. Start with a dry run.</code>
@@ -161,7 +161,7 @@
             <a class="btn ghost" href="https://github.com/manuel114/drinking-bird">Read the source</a>
           </div>
         </div>
-        <p class="countdown" id="countdown">Built for 19 November 2026. No particular reason.</p>
+        <p class="countdown" id="countdown">GTA VI is out on 19 November 2026.</p>
       </div>
 
       <div aria-hidden="true">
@@ -220,8 +220,8 @@
           <p>Direct messages and @mentions only. It waits 25 to 90 seconds, because nobody answers in 200 milliseconds, then replies as you.</p>
         </li>
         <li>
-          <h3>You do something else</h3>
-          <p>If you type in a conversation yourself, the bird backs off. After eight hours it clocks off. It has better boundaries than you do.</p>
+          <h3>You play GTA VI</h3>
+          <p>If you put the controller down and type in a conversation yourself, the bird backs off. After eight hours it clocks off. It has better boundaries than you do.</p>
         </li>
       </ol>
     </section>
@@ -261,6 +261,7 @@
           <li>&ldquo;Quick call?&rdquo; and its relatives</li>
           <li>&ldquo;Are you there?&rdquo;</li>
           <li>&ldquo;Is this a bot?&rdquo;</li>
+          <li>&ldquo;Are you playing GTA?&rdquo;</li>
           <li>Requests to approve, merge or sign off</li>
           <li>Passwords, payments and other secrets</li>
           <li>Anything with HR in it</li>
@@ -273,6 +274,8 @@
       <h2 class="display">QUESTIONS</h2>
       <dl>
         <div><dt>Is this a good idea?</dt><dd>No.</dd></div>
+        <div><dt>Why not just send a fake sick note?</dt><dd>Everyone on your team is sending one. Somebody has to look like they are at work. A sick note also runs out after a day, and the map does not.</dd></div>
+        <div><dt>Does it work after launch day?</dt><dd>Yes. It works any day. It was built for one.</dd></div>
         <div><dt>Do you host it? Do you see my messages?</dt><dd>No. It runs on your machine, with a Slack app you create in your own workspace. There is no server. We could not read your messages if we wanted to, and we do not want to.</dd></div>
         <div><dt>Does it keep my status dot green?</dt><dd>No. Slack decides that from real activity. The bird can answer for you. It cannot be you.</dd></div>
         <div><dt>Will my colleagues notice?</dt><dd>Eventually. That is how the episode ends, too.</dd></div>
@@ -283,7 +286,7 @@
   </main>
 
   <footer>
-    MIT licence. Not affiliated with any game studio, any cartoon, or your employer. A drinking bird is a real toy from 1945 and it is very patient.
+    MIT licence. A fan joke. Not affiliated with or endorsed by Rockstar Games, Take-Two Interactive, any cartoon, or your employer. Grand Theft Auto and GTA are trademarks of their owner. A drinking bird is a real toy from 1945 and it is very patient.
   </footer>
 </div>
 
@@ -304,12 +307,12 @@
   function tick() {
     const left = target - Date.now();
     if (left <= 0) {
-      countdown.innerHTML = "It is <b>19 November</b> or later. Why are you reading a website?";
+      countdown.innerHTML = "<b>GTA VI is out.</b> Why are you reading a website?";
       return;
     }
     const hours = Math.floor(left / 36e5);
     const days = Math.floor(hours / 24);
-    countdown.innerHTML = `<b>${days}d ${hours % 24}h</b> until your dentist appointment on 19 November.`;
+    countdown.innerHTML = `<b>${days}d ${hours % 24}h</b> until GTA VI. Your dentist appointment is confirmed.`;
   }
   tick();
   setInterval(tick, 60000);
@@ -321,6 +324,7 @@
     ["priya", "can you own the migration?", "y"],
     ["boss", "vent radioactive gas?", "y"],
     ["dana", "PROD IS DOWN", null],
+    ["boss", "you are not playing GTA are you", null],
     ["sam", "thanks, you're a star", "y"],
   ];
   const crt = document.getElementById("crt");

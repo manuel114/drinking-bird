@@ -41,6 +41,7 @@ const MELTDOWN_PATTERNS: ReadonlyArray<readonly [RegExp, string]> = [
   [/\b(call|ring|phone) me\b|\b(quick|jump on a|hop on a|join the) (call|huddle|zoom|meet)\b|\bhuddle\b/i, "someone wants a call"],
   [/\b(where are you|are you (there|around|awake|ok|okay|alive|coming|joining))\b/i, "someone is looking for you"],
   [/\b(are you|is this|am i talking to) (a |an )?(bot|ai|robot|real|automated|chatgpt|claude|bird)\b/i, "someone suspects the bird"],
+  [/\b(gta|grand theft auto|rockstar|vice city|playstation|ps5|xbox|gaming|playing)\b/i, "someone knows what day it is"],
   [/\b(hr|disciplinary|fired|termination|redundan\w+|performance review|resign\w*)\b/i, "this one matters for your job"],
   [/\b(password|credentials?|api key|secret|token|2fa|otp|bank|invoice|payment|wire)\b/i, "asks for something sensitive"],
   [/\b(approve|approval|sign[- ]?off|sign this|lgtm\?|merge|deploy|ship it\?)\b/i, "asks for a decision"],
