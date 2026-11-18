@@ -10,11 +10,6 @@ export interface Config {
   dryRun: boolean;
 }
 
-export interface SlackTokens {
-  appToken: string;
-  userToken: string;
-}
-
 export function loadEnvFile(): void {
   try {
     process.loadEnvFile();
@@ -52,14 +47,10 @@ export function readConfig(env: NodeJS.ProcessEnv, flags: { dryRun: boolean; mod
   };
 }
 
-export function readSlackTokens(env: NodeJS.ProcessEnv): SlackTokens {
-  const appToken = env.SLACK_APP_TOKEN ?? "";
-  const userToken = env.SLACK_USER_TOKEN ?? "";
-  if (!appToken.startsWith("xapp-")) {
-    throw new Error("SLACK_APP_TOKEN is missing or is not an app-level token (xapp-...). See the README.");
-  }
+export function readSlackToken(env: NodeJS.ProcessEnv): string {
+  const userToken = (env.SLACK_USER_TOKEN ?? "").trim();
   if (!userToken.startsWith("xoxp-")) {
     throw new Error("SLACK_USER_TOKEN is missing or is not a user token (xoxp-...). See the README.");
   }
-  return { appToken, userToken };
+  return userToken;
 }

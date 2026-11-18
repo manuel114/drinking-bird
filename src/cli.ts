@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 import { parseArgs } from "node:util";
 import { createAgentBrain, yBrain, type Brain } from "./brain.ts";
-import { loadEnvFile, readConfig, readSlackTokens, type Config } from "./config.ts";
+import { loadEnvFile, readConfig, readSlackToken, type Config } from "./config.ts";
 import * as log from "./log.ts";
 import { triage } from "./triage.ts";
 
@@ -66,10 +66,10 @@ async function main(): Promise<void> {
   }
 
   console.log(log.BANNER);
-  const tokens = readSlackTokens(process.env);
+  const token = readSlackToken(process.env);
   // Import Slack only for a real run, so the demo starts fast.
   const { startBird } = await import("./slack.ts");
-  await startBird(tokens, config, pickBrain(config));
+  await startBird(token, config, pickBrain(config));
 }
 
 main().catch((error: Error) => {

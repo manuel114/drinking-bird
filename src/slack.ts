@@ -1,44 +1,48 @@
-import { SocketModeClient } from "@slack/socket-mode";
 import { WebClient } from "@slack/web-api";
 import type { Brain } from "./brain.ts";
-import type { Config, SlackTokens } from "./config.ts";
+import type { Config } from "./config.ts";
 import * as log from "./log.ts";
 import type { HistoryLine } from "./prompt.ts";
 import { triage, type ChannelType, type IncomingMessage } from "./triage.ts";
 
-/** The fields of a Slack message event that the bird reads. */
-interface SlackMessageEvent {
-  channel: string;
-  ts: string;
-  channel_type?: string;
-  user?: string;
-  text?: string;
-  thread_ts?: string;
-  subtype?: string;
-  bot_id?: string;
-}
-
-interface SocketEnvelope {
-  event: SlackMessageEvent;
-  ack: () => Promise<void>;
+/**
+ * The bird has no real-time connection to Slack. It asks Slack for new messages
+ * in your direct messages and group messages, one conversation at a time.
+ * That needs one token and no extra Slack setup, and the bird waits before
+ * it answers anyway.
+ */
+interface Conversation {
+  id: string;
+  type: ChannelType;
+  /** Timestamp of the newest message the bird has seen here. */
+  cursor: string;
+  /** Busy conversations are checked on every pass. Quiet ones take turns. */
+  hot: boolean;
+  visited: boolean;
 }
 
 const HOUR_MS = 60 * 60 * 1000;
 /** After you type in a conversation yourself, the bird leaves it alone for this long. */
 const HUMAN_SNOOZE_MS = 15 * 60 * 1000;
 const HISTORY_LINES = 8;
+/** Slack allows about 50 history calls a minute. The bird stays well under that. */
+const CALL_GAP_MS = 1500;
+const MIN_PASS_MS = 15 * 1000;
+const CALLS_PER_PASS = 20;
+const LIST_REFRESH_MS = 5 * 60 * 1000;
+/** A conversation with a message in the last three days counts as busy. */
+const HOT_WINDOW_S = 3 * 24 * 60 * 60;
 
-function toChannelType(value: string | undefined): ChannelType {
-  return value === "im" || value === "mpim" || value === "group" ? value : "channel";
+function sleep(ms: number): Promise<void> {
+  return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
 function randomBetween(min: number, max: number): number {
   return min + Math.random() * (max - min);
 }
 
-export async function startBird(tokens: SlackTokens, config: Config, brain: Brain): Promise<void> {
-  const web = new WebClient(tokens.userToken);
-  const socket = new SocketModeClient({ appToken: tokens.appToken });
+export async function startBird(userToken: string, config: Config, brain: Brain): Promise<void> {
+  const web = new WebClient(userToken);
 
   const auth = await web.auth.test();
   const selfId = auth.user_id;
@@ -48,8 +52,11 @@ export async function startBird(tokens: SlackTokens, config: Config, brain: Brai
   const pending = new Map<string, NodeJS.Timeout>();
   const replyTimes = new Map<string, number[]>();
   const snoozedUntil = new Map<string, number>();
-  /** Messages the bird posted, so it can tell them apart from messages you typed. */
+  /** Timestamps of messages the bird posted, so it can tell them apart from messages you typed. */
   const birdPosts = new Set<string>();
+  const conversations = new Map<string, Conversation>();
+  const startTs = (Date.now() / 1000).toFixed(6);
+  let running = true;
 
   async function nameOf(userId: string): Promise<string> {
     const cached = names.get(userId);
@@ -108,29 +115,17 @@ export async function startBird(tokens: SlackTokens, config: Config, brain: Brai
       return;
     }
     if (!config.dryRun) {
-      birdPosts.add(`${message.channel}:${result.text}`);
-      await web.chat.postMessage({ channel: message.channel, text: result.text, thread_ts: threadTs });
+      const posted = await web.chat.postMessage({ channel: message.channel, text: result.text, thread_ts: threadTs });
+      if (posted.ts) birdPosts.add(posted.ts);
     }
     replyTimes.set(message.channel, [...(replyTimes.get(message.channel) ?? []), Date.now()]);
     log.dip(sender, message.text, result.text, config.dryRun);
   }
 
-  socket.on("message", async ({ event, ack }: SocketEnvelope) => {
-    await ack();
-    const message: IncomingMessage = {
-      channel: event.channel,
-      channelType: toChannelType(event.channel_type),
-      text: event.text ?? "",
-      ts: event.ts,
-      user: event.user,
-      threadTs: event.thread_ts,
-      subtype: event.subtype,
-      botId: event.bot_id,
-    };
-
+  async function handle(message: IncomingMessage): Promise<void> {
     // A message from you that the bird did not post means you are at your desk.
     if (message.user === selfId && !message.subtype) {
-      if (birdPosts.delete(`${message.channel}:${message.text}`)) return;
+      if (birdPosts.delete(message.ts)) return;
       const timer = pending.get(message.channel);
       if (timer) clearTimeout(timer);
       pending.delete(message.channel);
@@ -140,7 +135,7 @@ export async function startBird(tokens: SlackTokens, config: Config, brain: Brai
     }
 
     const verdict = triage(message, {
-      selfId,
+      selfId: selfId!,
       recentReplies: recentReplies(message.channel),
       maxRepliesPerHour: config.maxRepliesPerHour,
     });
@@ -167,20 +162,99 @@ export async function startBird(tokens: SlackTokens, config: Config, brain: Brai
         answer(message, verdict.threadTs).catch((error: Error) => log.alarm(sender, message.text, error.message));
       }, delayMs),
     );
-  });
+  }
 
-  await socket.start();
+  /** Finds your direct messages and group messages, including ones opened after the bird started. */
+  async function refreshConversations(): Promise<void> {
+    let cursor: string | undefined;
+    do {
+      const page = await web.users.conversations({ types: "im,mpim", exclude_archived: true, limit: 200, cursor });
+      for (const channel of page.channels ?? []) {
+        if (!channel.id || conversations.has(channel.id)) continue;
+        conversations.set(channel.id, {
+          id: channel.id,
+          type: channel.is_mpim ? "mpim" : "im",
+          cursor: startTs,
+          hot: false,
+          visited: false,
+        });
+      }
+      cursor = page.response_metadata?.next_cursor || undefined;
+    } while (cursor);
+  }
+
+  /** Reads what is new in one conversation and hands each new message to the bird. */
+  async function check(conversation: Conversation): Promise<void> {
+    // The first visit looks at the latest messages to learn whether the conversation is busy.
+    const response = conversation.visited
+      ? await web.conversations.history({ channel: conversation.id, oldest: conversation.cursor, limit: 15 })
+      : await web.conversations.history({ channel: conversation.id, limit: 5 });
+    conversation.visited = true;
+    const messages = [...(response.messages ?? [])].reverse();
+    const newest = messages.at(-1)?.ts;
+    if (newest && Number(newest) > Date.now() / 1000 - HOT_WINDOW_S) conversation.hot = true;
+
+    for (const raw of messages) {
+      if (!raw.ts || Number(raw.ts) <= Number(conversation.cursor)) continue;
+      conversation.cursor = raw.ts;
+      await handle({
+        channel: conversation.id,
+        channelType: conversation.type,
+        text: raw.text ?? "",
+        ts: raw.ts,
+        user: raw.user,
+        threadTs: raw.thread_ts === raw.ts ? undefined : raw.thread_ts,
+        subtype: raw.subtype,
+        botId: raw.bot_id,
+      });
+    }
+  }
+
+  async function poll(): Promise<void> {
+    let lastRefresh = 0;
+    let coldIndex = 0;
+    while (running) {
+      const passStart = Date.now();
+      try {
+        if (passStart - lastRefresh > LIST_REFRESH_MS) {
+          await refreshConversations();
+          lastRefresh = passStart;
+        }
+        const all = [...conversations.values()];
+        const hot = all.filter((conversation) => conversation.hot);
+        const cold = all.filter((conversation) => !conversation.hot);
+        const coldTurns = Math.min(cold.length, Math.max(5, CALLS_PER_PASS - hot.length));
+        const batch = [...hot];
+        for (let turn = 0; turn < coldTurns; turn++) batch.push(cold[(coldIndex + turn) % cold.length]!);
+        coldIndex = cold.length ? (coldIndex + coldTurns) % cold.length : 0;
+
+        for (const conversation of batch) {
+          if (!running) return;
+          await check(conversation);
+          await sleep(CALL_GAP_MS);
+        }
+      } catch (error) {
+        log.info(`Slack did not answer (${(error as Error).message}). The bird tries again.`);
+      }
+      await sleep(Math.max(0, MIN_PASS_MS - (Date.now() - passStart)));
+    }
+  }
+
+  await refreshConversations();
   log.info(`The bird covers for ${auth.user ?? selfId} in ${auth.team ?? "your workspace"}.`);
+  log.info(`Watching ${conversations.size} direct and group conversations. Channels are left alone.`);
   log.info(`Brain: ${brain.name}. Shift: ${config.hours}h.${config.dryRun ? " Dry run: nothing is sent." : ""}`);
 
-  const shiftEnd = setTimeout(() => {
-    log.info("Shift over. The bird stopped drinking.");
-    void socket.disconnect().then(() => process.exit(0));
-  }, config.hours * HOUR_MS);
-  shiftEnd.unref();
+  function stop(farewell: string): void {
+    running = false;
+    for (const timer of pending.values()) clearTimeout(timer);
+    log.info(farewell);
+    process.exit(0);
+  }
 
-  process.on("SIGINT", () => {
-    log.info("The bird stopped drinking. Welcome back.");
-    void socket.disconnect().then(() => process.exit(0));
-  });
+  const shiftEnd = setTimeout(() => stop("Shift over. The bird stopped drinking."), config.hours * HOUR_MS);
+  shiftEnd.unref();
+  process.on("SIGINT", () => stop("The bird stopped drinking. Welcome back."));
+
+  await poll();
 }

@@ -41,10 +41,11 @@ npm run demo -- "hey, did you get a chance to look at the Q4 deck?"
 
 ### Connect Slack
 
-1. Open https://api.slack.com/apps?new_app=1 and choose **From a manifest**. Pick your workspace and paste the contents of [slack-manifest.json](slack-manifest.json).
-2. In **Basic Information → App-Level Tokens**, generate a token with the `connections:write` scope. This is `SLACK_APP_TOKEN` (`xapp-…`).
-3. In **Install App**, install the app to your workspace. Copy the **User OAuth Token**. This is `SLACK_USER_TOKEN` (`xoxp-…`).
-4. Copy `.env.example` to `.env` and paste both tokens.
+1. Open [this link](https://api.slack.com/apps?new_app=1&manifest_json=%7B%22display_information%22%3A%7B%22name%22%3A%22Drinking%20Bird%22%2C%22description%22%3A%22Presses%20Y%20so%20you%20don%27t%20have%20to.%22%2C%22background_color%22%3A%22%23b3261e%22%7D%2C%22oauth_config%22%3A%7B%22scopes%22%3A%7B%22user%22%3A%5B%22chat%3Awrite%22%2C%22im%3Ahistory%22%2C%22im%3Aread%22%2C%22mpim%3Ahistory%22%2C%22mpim%3Aread%22%2C%22users%3Aread%22%5D%7D%7D%2C%22settings%22%3A%7B%22org_deploy_enabled%22%3Afalse%2C%22socket_mode_enabled%22%3Afalse%2C%22token_rotation_enabled%22%3Afalse%7D%7D). It opens Slack's "create app" page with the bird's settings already filled in. Pick your workspace and click **Create**. (If the link does not fill anything in, choose **Paste a manifest** and paste [slack-manifest.json](slack-manifest.json).)
+2. In **Install App**, install the app to your workspace. Copy the **User OAuth Token** (`xoxp-…`).
+3. Copy `.env.example` to `.env` and paste the token as `SLACK_USER_TOKEN`.
+
+That one token is all the bird needs. With it the bird can read your direct messages and group messages and post as you. It does not read channels.
 
 Some workspaces need an admin to approve new apps. How you word that request is up to you.
 
@@ -64,9 +65,8 @@ Stop it with Ctrl+C.
 
 ## What the bird does
 
-- It answers **direct messages** and **@mentions** of you. It ignores everything else.
+- It answers **direct messages**, and group messages that @mention you. It does not read channels.
 - It waits 25 to 90 seconds before it replies. If more messages arrive in that time, it answers only the last one.
-- In a channel it replies in a thread.
 - If you type in a conversation yourself, the bird leaves that conversation alone for 15 minutes.
 - After 8 hours it stops.
 
