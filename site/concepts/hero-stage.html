@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Hero stage test</title>
+<style>
+  * { box-sizing: border-box; margin: 0; }
+  body { background: #07080a; }
+  .hero { position: relative; height: 100svh; min-height: 560px; overflow: hidden; }
+
+  /* ---- hero stage: layered artwork, sized like background-size: cover ---- */
+  #hero-stage { position: absolute; inset: 0; overflow: hidden; container-type: size; background: #1a1420; }
+  .plate {
+    --w: max(100cqw, 100cqh * 1672 / 941);
+    position: absolute; bottom: 0; width: var(--w); aspect-ratio: 1672 / 941;
+    /* keep the bird and the Y key (about 42% across) in view on narrow screens */
+    left: clamp(100cqw - var(--w), 50cqw - 0.39 * var(--w), 0px);
+  }
+  .plate > img.bg { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+  /* Layer positions are percentages of the plate, so they scale with it. */
+  .stand { position: absolute; left: 26.1%; top: 68.7%; width: 11.7%; z-index: 2; }
+  .arm {
+    position: absolute; left: 26.9%; top: 36%; width: 14.5%; z-index: 3;
+    transform-origin: 34.7% 52.6%;
+    animation: dip 3.6s cubic-bezier(.5, 0, .3, 1) infinite;
+  }
+  .glow {
+    position: absolute; left: 43.2%; top: 78%; width: 6.4%; aspect-ratio: 1.5; z-index: 1; border-radius: 50%;
+    background: radial-gradient(closest-side, rgba(255, 226, 90, .95), rgba(255, 226, 90, 0));
+    opacity: 0; animation: tap 3.6s linear infinite; mix-blend-mode: screen;
+  }
+  .plus {
+    position: absolute; left: 45.2%; top: 72%; z-index: 4; font: 400 3.2cqw/1 "Anton", Impact, sans-serif; color: #ffd23c;
+    text-shadow: 0 2px 0 #07080a, 2px 0 0 #07080a, -2px 0 0 #07080a, 0 -2px 0 #07080a;
+    opacity: 0; animation: rise 3.6s ease-out infinite;
+  }
+  .screen {
+    position: absolute; left: 78.2%; top: 28.5%; width: 19.6%; height: 27%; z-index: 2;
+    transform: skewY(-3.2deg); display: flex; flex-direction: column; justify-content: flex-end; gap: 6%; padding: 4% 5%;
+    font: 700 1.3cqw/1.2 "Archivo", system-ui, sans-serif;
+  }
+  .bubble { max-width: 86%; padding: .5em .8em; border-radius: 1em; background: #0c2f2a; color: #d9fff5; animation: pop .35s cubic-bezier(.2, 1.6, .4, 1) both; }
+  .bubble.me { align-self: flex-end; background: #ffd23c; color: #07080a; }
+  .bubble.alarm { align-self: flex-end; background: #ff4f9a; color: #07080a; }
+
+  @keyframes dip {
+    0%, 26%   { transform: rotate(-9deg); }
+    44%, 50%  { transform: rotate(73deg); }
+    68%       { transform: rotate(-16deg); }
+    82%       { transform: rotate(-5deg); }
+    100%      { transform: rotate(-9deg); }
+  }
+  @keyframes tap { 0%, 43% { opacity: 0; transform: scale(.4); } 46% { opacity: 1; transform: scale(1); } 60%, 100% { opacity: 0; transform: scale(1.5); } }
+  @keyframes rise { 0%, 44% { opacity: 0; transform: translateY(0); } 48% { opacity: 1; } 75%, 100% { opacity: 0; transform: translateY(-160%); } }
+  @keyframes pop { from { opacity: 0; transform: scale(.6); } }
+  @media (prefers-reduced-motion: reduce) { .arm, .glow, .plus, .bubble { animation: none; } }
+</style>
+</head>
+<body>
+<div class="hero">
+  <div id="hero-stage" data-slot="animated-hero" aria-hidden="true">
+    <div class="plate">
+      <img class="bg" src="../img/hero-plate.jpg" alt="">
+      <div class="glow"></div>
+      <img class="stand" src="../img/bird-stand.webp" alt="">
+      <img class="arm" src="../img/bird-arm.webp" alt="">
+      <div class="plus">+Y</div>
+      <div class="screen" id="screen"></div>
+    </div>
+  </div>
+</div>
+<script>
+  const feed = [["did you see my PR?", "y"], ["on track for friday?", "y"], ["can you own the migration?", "y"], ["PROD IS DOWN", null]];
+  const screen = document.getElementById("screen");
+  let i = 0;
+  function bubble(text, cls) { const b = document.createElement("div"); b.className = "bubble " + cls; b.textContent = text; screen.append(b); while (screen.children.length > 3) screen.firstChild.remove(); }
+  function cycle() { const [q, a] = feed[i++ % feed.length]; bubble(q, ""); setTimeout(() => a ? bubble(a, "me") : bubble("human required", "alarm"), 1650); }
+  cycle(); document.querySelector(".arm").addEventListener("animationiteration", cycle);
+</script>
+</body>
+</html>

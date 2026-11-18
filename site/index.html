@@ -1,337 +1,277 @@
 <!doctype html>
 <html lang="en">
-<head>
+<head><style data-doop-tokens>:root{--color-ground:#140a20;--color-ground-raised:#221034;--color-ink:#09060e;--color-text:#fff7ef;--color-muted:#d2c2e0;--color-line:rgba(255,255,255,.18);--color-yellow:#ffd23c;--color-pink:#ff3d8b;--color-orange:#ff7a29;--color-teal:#1fe5c9;--color-purple:#7b2cff;--color-keycap:#efe5cf;--color-keycap-shade:#b3a585;--radius-sm:6px;--radius-md:12px;--spacing-gutter:64px;--spacing-gutter-mobile:16px;--font-display:"Anton", Impact, sans-serif;--font-body:"Archivo", system-ui, sans-serif;--font-mono:ui-monospace, Menlo, monospace;--text-label:13px;--text-small:15px;--text-body:18px;--text-h3:32px}</style>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Drinking Bird — covers your Slack on GTA VI launch day</title>
 <meta name="description" content="GTA VI is out on 19 November 2026. Drinking Bird answers your Slack while you are 'working from home'.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Anton&family=Archivo:wght@400;500;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Archivo:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
-  :root {
-    --ink: #07080a;
-    --panel: rgba(12, 13, 17, .78);
-    --line: rgba(255, 255, 255, .22);
-    --white: #fff;
-    --muted: #b9bcc6;
-    --yellow: #ffd23c;
-    --green: #5fe08a;
-    --pink: #ff4f9a;
-    --blue: #5aa9ff;
-  }
-  * { box-sizing: border-box; }
-  html { scroll-behavior: smooth; }
-  body { margin: 0; background: var(--ink); color: var(--white); font: 500 17px/1.55 "Archivo", system-ui, sans-serif; -webkit-font-smoothing: antialiased; }
-  a { color: var(--yellow); }
-  .display { font-family: "Anton", Impact, sans-serif; font-weight: 400; text-transform: uppercase; letter-spacing: .01em; line-height: .95; }
-  .label { font-size: 13px; font-weight: 700; letter-spacing: .16em; text-transform: uppercase; }
-  /* Game-style outlined text: readable on top of any artwork. */
-  .out { text-shadow: 0 2px 0 var(--ink), 2px 0 0 var(--ink), -2px 0 0 var(--ink), 0 -2px 0 var(--ink), 0 4px 12px rgba(0,0,0,.65); }
-  .wrap { max-width: 1120px; margin: 0 auto; padding: 0 16px; }
+* { margin:0; padding:0; box-sizing:border-box; }
+html { background:var(--color-ground); }
+body { background:var(--color-ground); color:var(--color-text); font:500 var(--text-body)/1.55 var(--font-body); -webkit-font-smoothing:antialiased; overflow-x:hidden; }
+.display { font-family:var(--font-display); font-weight:400; text-transform:uppercase; line-height:.92; letter-spacing:.01em; }
+.label { font:700 var(--text-label)/1.3 var(--font-body); letter-spacing:.18em; text-transform:uppercase; }
+.out { text-shadow:0 2px 0 var(--color-ink), 2px 0 0 var(--color-ink), -2px 0 0 var(--color-ink), 0 -2px 0 var(--color-ink), 0 4px 14px rgba(0,0,0,.6); }
+.wrap { max-width:1440px; margin:0 auto; padding:0 var(--spacing-gutter); }
 
-  /* ---------- Hero: the in-game screen ---------- */
-  .hero {
-    position: relative; min-height: 100svh; display: grid; grid-template-rows: auto 1fr auto; gap: 10px;
-    padding: 22px clamp(16px, 3vw, 44px);
-    background: #1a1420 url("img/panel-office.jpg") center/cover no-repeat;
-    isolation: isolate;
-  }
-  .hero::before { content: ""; position: absolute; inset: 0; z-index: -1; background: radial-gradient(ellipse at center, rgba(7,8,10,.5) 0%, rgba(7,8,10,.86) 100%); }
-  .hud-top { display: flex; justify-content: space-between; align-items: flex-start; gap: 16px; }
-  .brand { font-size: 30px; }
-  .brand small { display: block; margin-top: 6px; color: var(--green); font: 700 12px/1 "Archivo", sans-serif; letter-spacing: .16em; }
-  .wanted { text-align: right; }
-  .stars { font-size: clamp(28px, 4vw, 44px); letter-spacing: 6px; line-height: 1; }
-  .stars span { opacity: .28; transition: opacity .2s; }
-  .stars span.on { opacity: 1; }
-  .stars.hot span.on { color: var(--pink); animation: blink .5s steps(2) infinite; }
-  @keyframes blink { 50% { opacity: .35; } }
-  .cash { font-size: clamp(24px, 3.2vw, 40px); color: var(--green); margin-top: 8px; }
+/* ---------- Hero ---------- */
+.hero { position:relative; height:clamp(760px, 100svh, 1000px); overflow:hidden; isolation:isolate; }
 
-  .banner { align-self: center; text-align: center; }
-  .banner h1 { margin: 12px 0 0; font-size: clamp(64px, 10.5vw, 136px); color: var(--yellow); }
-  .banner .sub { margin-top: 14px; font-size: clamp(26px, 3.6vw, 46px); }
-  .banner .sub b { color: var(--green); font-weight: 400; }
-  .rule { width: min(520px, 80%); height: 3px; margin: 14px auto; background: linear-gradient(90deg, transparent, var(--white), transparent); opacity: .7; }
-  .banner p { margin: 0 auto 18px; max-width: 58ch; font-size: clamp(17px, 1.6vw, 21px); }
-  .cta { display: inline-flex; flex-wrap: wrap; justify-content: center; gap: 12px; }
-  button, .btn {
-    font: 700 15px/1 "Archivo", sans-serif; letter-spacing: .06em; text-transform: uppercase; text-decoration: none; cursor: pointer;
-    display: inline-flex; align-items: center; gap: 10px; padding: 10px 18px 10px 10px; border-radius: 8px;
-    border: 2px solid var(--ink); background: var(--yellow); color: var(--ink); text-shadow: none; box-shadow: 0 4px 0 var(--ink);
-  }
-  .btn.ghost { background: rgba(7,8,10,.6); color: var(--white); border-color: var(--line); padding-left: 18px; }
-  button kbd { display: inline-grid; place-items: center; width: 34px; height: 34px; border-radius: 6px; background: var(--white); color: var(--ink); font: 400 22px/1 "Anton", sans-serif; box-shadow: 0 3px 0 #9aa0aa; }
-  button:focus-visible, .btn:focus-visible { outline: 3px solid var(--white); outline-offset: 3px; }
-  .promptline { margin: 14px auto 0; max-width: 62ch; font: 500 14px/1.5 ui-monospace, Menlo, monospace; color: var(--white); background: rgba(7,8,10,.62); border: 1px solid var(--line); border-radius: 6px; padding: 8px 12px; overflow-wrap: anywhere; text-shadow: none; }
+/* ---- hero stage: layered artwork, sized like background-size: cover ---- */
+#hero-stage { position: absolute; inset: 0; overflow: hidden; container-type: size; background: #1a1420; }
+.plate {
+  --w: max(100cqw, 100cqh * 1672 / 941);
+  position: absolute; bottom: 0; width: var(--w); aspect-ratio: 1672 / 941;
+  /* keep the bird and the Y key (about 42% across) in view on narrow screens */
+  left: clamp(100cqw - var(--w), 50cqw - 0.39 * var(--w), 0px);
+}
+.plate > img.bg { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+/* Layer positions are percentages of the plate, so they scale with it. */
+.stand { position: absolute; left: 26.1%; top: 68.7%; width: 11.7%; z-index: 2; }
+.arm {
+  position: absolute; left: 26.9%; top: 36%; width: 14.5%; z-index: 3;
+  transform-origin: 34.7% 52.6%;
+  animation: dip 3.6s cubic-bezier(.5, 0, .3, 1) infinite;
+}
+.glow {
+  position: absolute; left: 43.2%; top: 78%; width: 6.4%; aspect-ratio: 1.5; z-index: 1; border-radius: 50%;
+  background: radial-gradient(closest-side, rgba(255, 226, 90, .95), rgba(255, 226, 90, 0));
+  opacity: 0; animation: tap 3.6s linear infinite; mix-blend-mode: screen;
+}
+.plus {
+  position: absolute; left: 45.2%; top: 72%; z-index: 4; font: 400 3.2cqw/1 "Anton", Impact, sans-serif; color: #ffd23c;
+  text-shadow: 0 2px 0 #07080a, 2px 0 0 #07080a, -2px 0 0 #07080a, 0 -2px 0 #07080a;
+  opacity: 0; animation: rise 3.6s ease-out infinite;
+}
+.screen {
+  position: absolute; left: 78.2%; top: 28.5%; width: 19.6%; height: 27%; z-index: 2;
+  transform: skewY(-3.2deg); display: flex; flex-direction: column; justify-content: flex-end; gap: 6%; padding: 4% 5%;
+  font: 700 1.3cqw/1.2 "Archivo", system-ui, sans-serif;
+}
+.bubble { max-width: 86%; padding: .5em .8em; border-radius: 1em; background: #0c2f2a; color: #d9fff5; animation: pop .35s cubic-bezier(.2, 1.6, .4, 1) both; }
+.bubble.me { align-self: flex-end; background: #ffd23c; color: #07080a; }
+.bubble.alarm { align-self: flex-end; background: #ff4f9a; color: #07080a; }
 
-  .hud-bottom { display: grid; grid-template-columns: 236px 1fr 236px; align-items: end; gap: 24px; }
-  .minimap {
-    position: relative; width: 150px; height: 150px; border-radius: 50%; border: 6px solid var(--ink); outline: 3px solid rgba(255,255,255,.75);
-    background:
-      linear-gradient(115deg, transparent 47%, #6b6f78 47% 53%, transparent 53%),
-      linear-gradient(25deg, transparent 46%, #6b6f78 46% 52%, transparent 52%),
-      linear-gradient(80deg, transparent 62%, var(--pink) 62% 65%, transparent 65%),
-      #2c3038;
-  }
-  .minimap::before { content: ""; position: absolute; left: 50%; top: 50%; border: 10px solid transparent; border-bottom: 20px solid var(--white); transform: translate(-50%, -70%) rotate(20deg); }
-  .minimap::after { content: "SOFA"; position: absolute; right: 14px; top: 30px; background: var(--pink); color: var(--ink); font: 700 11px/1 "Archivo", sans-serif; padding: 4px 6px; border-radius: 3px; }
-  .bars { display: flex; gap: 6px; width: 150px; margin-top: 10px; }
-  .bars span { height: 9px; flex: 1; background: var(--green); border: 2px solid var(--ink); }
-  .bars span + span { background: var(--blue); flex: .6; }
-  .subs { text-align: center; font-size: clamp(18px, 2vw, 26px); min-height: 3.2em; }
-  .subs em { font-style: normal; color: var(--yellow); }
-  .subs .alarm { color: var(--pink); }
-  .count { text-align: right; }
-  .count b { display: block; font: 400 clamp(26px, 3vw, 40px)/1 "Anton", sans-serif; color: var(--white); margin-bottom: 6px; }
+@keyframes dip {
+  0%, 26%   { transform: rotate(-9deg); }
+  44%, 50%  { transform: rotate(73deg); }
+  68%       { transform: rotate(-16deg); }
+  82%       { transform: rotate(-5deg); }
+  100%      { transform: rotate(-9deg); }
+}
+@keyframes tap { 0%, 43% { opacity: 0; transform: scale(.4); } 46% { opacity: 1; transform: scale(1); } 60%, 100% { opacity: 0; transform: scale(1.5); } }
+@keyframes rise { 0%, 44% { opacity: 0; transform: translateY(0); } 48% { opacity: 1; } 75%, 100% { opacity: 0; transform: translateY(-160%); } }
+@keyframes pop { from { opacity: 0; transform: scale(.6); } }
+@media (prefers-reduced-motion: reduce) { .arm, .glow, .plus, .bubble { animation: none; } }
+/* ---- end of hero stage ---- */
 
-  /* ---------- Below the fold: the pause menu ---------- */
-  section { padding: 72px 0; border-top: 1px solid var(--line); }
-  h2 { margin: 0 0 8px; font-size: clamp(44px, 7vw, 76px); color: var(--yellow); }
-  .lede { margin: 0 0 32px; max-width: 62ch; color: var(--muted); }
-  .cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; padding: 0; margin: 0; list-style: none; }
-  .card { background: var(--panel); border: 1px solid var(--line); border-radius: 4px; padding: 22px; }
-  .card .label { color: var(--green); }
-  .card h3 { margin: 8px 0 8px; font: 400 28px/1.05 "Anton", sans-serif; text-transform: uppercase; }
-  .card p { margin: 0; color: var(--muted); font-size: 15px; }
-  .reward { margin-top: 14px; padding-top: 12px; border-top: 1px dashed var(--line); font-size: 13px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: var(--yellow); }
+.shade { position:absolute; inset:0 0 auto; height:420px; z-index:1; pointer-events:none; background:linear-gradient(180deg, rgba(9,6,14,.82) 0%, rgba(9,6,14,.5) 45%, rgba(9,6,14,0) 100%); }
+.top { position:absolute; z-index:3; left:var(--spacing-gutter); right:var(--spacing-gutter); top:32px; display:flex; justify-content:space-between; align-items:flex-start; gap:24px; }
+.brand { font-size:36px; }
+.brand small { display:flex; align-items:center; gap:8px; margin-top:10px; color:var(--color-teal); font:700 var(--text-label)/1 var(--font-body); letter-spacing:.18em; }
+.dot { width:9px; height:9px; border-radius:50%; background:var(--color-teal); box-shadow:0 0 12px var(--color-teal); }
+.wanted { text-align:right; }
+.stars { font-size:44px; letter-spacing:6px; line-height:1; }
+.stars span { display:inline-block; }
+.stars .on { color:var(--color-text); }
+.stars .off { opacity:.25; }
+.wanted .label { margin-top:8px; }
+.banner { position:absolute; z-index:3; left:0; right:0; top:84px; display:flex; flex-direction:column; align-items:center; text-align:center; padding:0 24px; }
+.tag { display:inline-block; padding:8px 16px; background:var(--color-pink); color:var(--color-ink); transform:skewX(-12deg); box-shadow:5px 5px 0 var(--color-ink); text-shadow:none; }
+.tag span { display:inline-block; transform:skewX(12deg); }
+.mp { margin-top:20px; font-size:clamp(84px, 9.2vw, 132px); color:var(--color-yellow); transform:rotate(-2deg); text-shadow:-3px -3px 0 var(--color-ink), 3px -3px 0 var(--color-ink), -3px 3px 0 var(--color-ink), 3px 3px 0 var(--color-ink), 0 9px 0 var(--color-pink), 0 16px 0 var(--color-purple), 0 22px 50px rgba(255,61,139,.5); }
+.sub { margin-top:26px; font-size:42px; }
+.sub b { color:var(--color-teal); font-weight:400; }
 
-  .split { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
-  .chat { margin-top: 14px; font-size: 15px; display: grid; gap: 4px; }
-  .chat .them { color: var(--muted); }
-  .chat .you { color: var(--yellow); }
+.panel { position:absolute; z-index:3; right:var(--spacing-gutter); bottom:28px; width:460px; padding:22px 22px 20px; background:rgba(9,6,14,.86); border:2px solid var(--color-ink); border-top:4px solid var(--color-yellow); border-radius:var(--radius-md); box-shadow:8px 8px 0 var(--color-ink); }
+.pitch { font-size:var(--text-small); line-height:1.5; }
+.cta { display:flex; flex-wrap:wrap; align-items:center; gap:12px 20px; margin-top:18px; }
+.btn { font:800 15px/1 var(--font-body); letter-spacing:.06em; text-transform:uppercase; cursor:pointer; display:inline-flex; align-items:center; gap:12px; height:54px; padding:0 20px 0 8px; border-radius:var(--radius-sm); border:3px solid var(--color-ink); background:var(--color-yellow); color:var(--color-ink); box-shadow:0 5px 0 var(--color-ink); transition:transform .15s ease, box-shadow .15s ease; }
+.btn:hover { transform:translateY(-2px); box-shadow:0 7px 0 var(--color-ink), 0 0 28px rgba(255,210,60,.5); }
+.btn:active { transform:translateY(4px); box-shadow:0 1px 0 var(--color-ink); }
+.btn:focus-visible, .link:focus-visible { outline:3px solid var(--color-teal); outline-offset:4px; }
+.key { display:inline-grid; place-items:center; width:36px; height:36px; border-radius:6px; background:var(--color-keycap); color:var(--color-ink); font:400 21px/1 var(--font-display); border:1px solid var(--color-keycap-shade); box-shadow:0 3px 0 var(--color-keycap-shade); }
+.link { color:var(--color-text); font-weight:700; font-size:var(--text-small); text-decoration:underline; text-decoration-color:var(--color-teal); text-decoration-thickness:2px; text-underline-offset:5px; }
+.link:hover { color:var(--color-teal); }
+.prompt { margin-top:18px; padding:10px 14px; background:var(--color-ink); border:1px solid var(--color-line); border-left:4px solid var(--color-teal); border-radius:var(--radius-sm); font:500 13px/1.5 var(--font-mono); color:var(--color-muted); overflow-wrap:anywhere; }
 
-  .wanted-box { display: grid; grid-template-columns: 1.1fr .9fr; gap: 32px; align-items: center; }
-  .wanted-box img { width: 100%; height: auto; display: block; border: 1px solid var(--line); border-radius: 4px; }
-  .triggers { margin: 0; padding: 0; list-style: none; display: grid; gap: 10px; }
-  .triggers li { display: flex; gap: 14px; align-items: baseline; }
-  .triggers .s { color: var(--pink); letter-spacing: 2px; white-space: nowrap; font-size: 15px; min-width: 5.5em; }
+/* ---------- Sections ---------- */
+.band { padding:72px 0 80px; }
+.kicker { display:inline-flex; align-items:center; gap:10px; color:var(--color-teal); }
+.kicker::before { content:""; width:28px; height:3px; background:currentColor; }
+.h2 { margin-top:12px; font-size:64px; color:var(--color-yellow); text-shadow:4px 4px 0 var(--color-pink), 8px 8px 0 var(--color-purple); }
+.how { background:radial-gradient(ellipse 45% 60% at 90% 0%, rgba(123,44,255,.32), transparent 70%), var(--color-ground); border-top:4px solid var(--color-ink); }
+.steps { list-style:none; display:grid; grid-template-columns:repeat(3,1fr); gap:28px; margin-top:40px; }
+.step { --accent:var(--color-teal); position:relative; overflow:hidden; padding:30px 28px 30px; background:var(--color-ground-raised); border:2px solid var(--color-line); border-radius:var(--radius-md); }
+.step::before { content:""; position:absolute; left:0; right:0; top:0; height:6px; background:var(--accent); }
+.step.pink { --accent:var(--color-pink); } .step.orange { --accent:var(--color-orange); }
+.step .label { color:var(--accent); }
+.step h3 { margin-top:14px; font:400 var(--text-h3)/1.02 var(--font-display); text-transform:uppercase; }
+.step p { margin-top:14px; color:var(--color-muted); font-size:17px; }
 
-  dl { margin: 0; display: grid; gap: 0; max-width: 820px; border-top: 1px solid var(--line); }
-  dl > div { display: grid; grid-template-columns: 1fr 1.4fr; gap: 24px; padding: 16px 0; border-bottom: 1px solid var(--line); }
-  dt { font-weight: 700; }
-  dd { margin: 0; color: var(--muted); }
+.pause { background:var(--color-ground-raised); border-top:4px solid var(--color-ink); }
+.faq { margin-top:36px; border-top:3px solid var(--color-text); }
+.faq > div { display:grid; grid-template-columns:1fr 1.4fr; gap:32px; padding:16px 20px; border-bottom:1px solid var(--color-line); transition:background .2s ease, color .2s ease; }
+.faq > div:hover { background:var(--color-yellow); color:var(--color-ink); }
+.faq dt { font-weight:800; font-size:19px; line-height:1.4; }
+.faq dd { color:var(--color-muted); font-size:17px; }
+.faq > div:hover dd { color:var(--color-ink); }
 
-  footer { padding: 36px 0 64px; border-top: 1px solid var(--line); color: var(--muted); font-size: 13px; }
+.foot { padding:40px 0 48px; background:var(--color-ground); border-top:4px solid var(--color-ink); }
+.legal { max-width:860px; color:var(--color-muted); font-size:14px; line-height:1.6; }
 
-  @media (max-width: 860px) {
-    .hud-bottom { grid-template-columns: 1fr; justify-items: center; }
-    .minimap, .bars { display: none; }
-    .count { text-align: center; }
-    .cards, .split, .wanted-box { grid-template-columns: 1fr; }
-    dl > div { grid-template-columns: 1fr; gap: 4px; }
-    .brand { font-size: 24px; }
-  }
-  @media (prefers-reduced-motion: reduce) {
-    html { scroll-behavior: auto; }
-    .stars.hot span.on { animation: none; }
-  }
+/* ---------- Motion: headline slams in once, lit stars pulse ---------- */
+@media (prefers-reduced-motion: no-preference) {
+  .mp { animation:slam .75s cubic-bezier(.2,1.3,.4,1) .2s; }
+  .stars .on { animation:pulse 2.4s ease-in-out infinite; }
+  .stars .on:nth-child(2) { animation-delay:.2s; } .stars .on:nth-child(3) { animation-delay:.4s; }
+}
+/* No opacity in this animation: if a browser pauses it, the headline must still be visible. */
+@keyframes slam { 0% { transform:scale(2.2) rotate(-9deg); } 55% { transform:scale(.92) rotate(-1deg); } 75% { transform:scale(1.05) rotate(-2.5deg); } 100% { transform:scale(1) rotate(-2deg); } }
+@keyframes pulse { 0%, 100% { opacity:1; transform:scale(1); } 50% { opacity:.65; transform:scale(.92); } }
+@media (prefers-reduced-motion: reduce) {
+  .mp, .stars .on { animation:none; }
+  .btn, .btn:hover, .btn:active { transition:none; transform:none; }
+}
+
+/* ---------- Phone ---------- */
+@media (max-width: 820px) {
+  .wrap { padding:0 var(--spacing-gutter-mobile); }
+  .hero { height:auto; display:flex; flex-direction:column; background:var(--color-ground); }
+  .shade { display:none; }
+  .top, .banner, .panel { position:relative; left:auto; right:auto; top:auto; bottom:auto; }
+  .top { padding:20px var(--spacing-gutter-mobile) 0; gap:12px; }
+  .brand { font-size:24px; }
+  .brand small { margin-top:6px; font-size:10px; letter-spacing:.12em; }
+  .stars { font-size:24px; letter-spacing:2px; }
+  .wanted .label { font-size:10px; letter-spacing:.1em; margin-top:4px; }
+  .banner { padding:32px var(--spacing-gutter-mobile) 36px; }
+  .tag { font-size:11px; padding:7px 12px; }
+  .mp { margin-top:18px; font-size:74px; line-height:.9; text-shadow:-2px -2px 0 var(--color-ink), 2px -2px 0 var(--color-ink), -2px 2px 0 var(--color-ink), 2px 2px 0 var(--color-ink), 0 6px 0 var(--color-pink), 0 11px 0 var(--color-purple); }
+  .sub { margin-top:20px; font-size:30px; }
+  .top { order:1; } .banner { order:2; } #hero-stage { order:3; } .panel { order:4; }
+  #hero-stage { position:relative; inset:auto; height:420px; flex:none; }
+  .panel { width:auto; margin:20px var(--spacing-gutter-mobile) 0; box-shadow:6px 6px 0 var(--color-ink); }
+  .cta { flex-direction:column; align-items:stretch; gap:16px; }
+  .btn { justify-content:flex-start; }
+  .link { align-self:center; }
+  .band { padding:64px 0; }
+  .h2 { font-size:56px; text-shadow:3px 3px 0 var(--color-pink), 6px 6px 0 var(--color-purple); }
+  .steps { grid-template-columns:1fr; gap:18px; margin-top:32px; }
+  .step { padding:26px 22px 24px; }
+  .step h3 { font-size:28px; }
+  .step p { font-size:16px; }
+  .faq { margin-top:32px; }
+  .faq > div { grid-template-columns:1fr; gap:6px; padding:16px 12px; }
+  .faq dt { font-size:17px; }
+  .faq dd { font-size:16px; }
+  .foot { padding:32px 0 40px; }
+  .legal { font-size:13px; }
+}
 </style>
 </head>
 <body>
-<main>
-  <div class="hero">
-    <div class="hud-top out">
-      <div class="brand display">Drinking Bird<small>SLACK COVER · ACTIVE</small></div>
-      <div class="wanted">
-        <div class="stars" id="stars" aria-label="Wanted level: 3 of 5"><span class="on">★</span><span class="on">★</span><span class="on">★</span><span>★</span><span>★</span></div>
-        <div class="label">Wanted by your manager</div>
-        <div class="cash display">$0 productivity</div>
-      </div>
+<header class="hero" id="top">
+  <div id="hero-stage" data-slot="animated-hero" aria-hidden="true">
+    <div class="plate">
+      <img class="bg" src="img/hero-plate.jpg" alt="" width="1672" height="941">
+      <div class="glow"></div>
+      <img class="stand" src="img/bird-stand.webp" alt="">
+      <img class="arm" src="img/bird-arm.webp" alt="">
+      <div class="plus">+Y</div>
+      <div class="screen" id="screen"></div>
     </div>
+  </div>
+  <div class="shade" aria-hidden="true"></div>
 
-    <div class="banner out">
-      <div class="label">GTA VI · 19 November 2026</div>
-      <h1 class="display">Mission passed</h1>
-      <div class="sub display">Looked busy <b>+100</b></div>
-      <div class="rule"></div>
-      <p>GTA VI is out. You have a job. Drinking Bird answers your Slack with plausible, non-committal replies while you are &ldquo;working from home&rdquo;. It is open source, it runs on your laptop, and it uses the coding agent you already have.</p>
-      <div class="cta">
-        <button id="copy" type="button"><kbd>Y</kbd><span id="copy-text">Copy the setup prompt</span></button>
-        <a class="btn ghost" href="https://github.com/manuel114/drinking-bird">Read the source</a>
-      </div>
-      <div class="promptline" id="prompt">Clone https://github.com/manuel114/drinking-bird, read AGENTS.md and set it up for me. Start with a dry run.</div>
-    </div>
-
-    <div class="hud-bottom out">
-      <div aria-hidden="true">
-        <div class="minimap"></div>
-        <div class="bars"><span></span><span></span></div>
-      </div>
-      <div class="subs" id="subs" aria-live="off"><em>Dana:</em> did you see my PR? &nbsp; <em>You:</em> y</div>
-      <div class="count label" id="countdown">GTA VI is out on 19 November 2026</div>
+  <div class="top out">
+    <div class="brand display">Drinking Bird<small><span class="dot"></span>Slack cover · active</small></div>
+    <div class="wanted">
+      <div class="stars" aria-label="Wanted level: 3 of 5"><span class="on">★</span><span class="on">★</span><span class="on">★</span><span class="off">★</span><span class="off">★</span></div>
+      <div class="label">Wanted by your manager</div>
     </div>
   </div>
 
-  <section>
+  <div class="banner out">
+    <div class="tag label"><span>GTA VI · 19 November 2026</span></div>
+    <h1 class="mp display">Mission passed</h1>
+    <div class="sub display">Looked busy <b>+100</b></div>
+  </div>
+
+  <div class="panel">
+    <p class="pitch">GTA VI is out. You have a job. Drinking Bird answers your Slack with plausible, non-committal replies while you are &ldquo;working from home&rdquo;. It is open source, runs on your laptop, and uses the coding agent you already have.</p>
+    <div class="cta">
+      <button class="btn" id="copy" type="button"><kbd class="key">Y</kbd><span>Copy the setup prompt</span></button>
+      <a class="link" href="https://github.com/manuel114/drinking-bird">Read the source</a>
+    </div>
+    <div class="prompt" id="prompt">Clone https://github.com/manuel114/drinking-bird, read AGENTS.md and set it up for me. Start with a dry run.</div>
+  </div>
+</header>
+
+<main>
+  <section class="band how" id="how">
     <div class="wrap">
-      <h2 class="display">Missions</h2>
-      <p class="lede">Three missions. The first two take about two minutes. The third takes as long as the story mode does.</p>
-      <ol class="cards">
-        <li class="card">
-          <div class="label">Mission 01</div>
+      <div class="kicker label">Three steps</div>
+      <h2 class="h2 display">How it works</h2>
+      <ol class="steps">
+        <li class="step">
+          <div class="label">01</div>
           <h3>Hand it to your coding agent</h3>
           <p>Claude Code, Codex, or anything that takes a prompt. It clones the repo, walks you through a small Slack app, and starts the bird in a dry run.</p>
-          <div class="reward">Reward: one bird</div>
         </li>
-        <li class="card">
-          <div class="label">Mission 02</div>
-          <h3>Let the bird watch your Slack</h3>
-          <p>Direct messages and @mentions only. It waits 25 to 90 seconds, because nobody answers in 200 milliseconds, then replies as you.</p>
-          <div class="reward">Reward: looked busy +100</div>
+        <li class="step pink">
+          <div class="label">02</div>
+          <h3>The bird answers for you</h3>
+          <p>Direct messages and @mentions only. It waits 25 to 90 seconds, then replies as you. It never agrees to a deadline, a meeting or a decision.</p>
         </li>
-        <li class="card">
-          <div class="label">Mission 03</div>
-          <h3>Play GTA VI</h3>
-          <p>If you put the controller down and type in a conversation yourself, the bird backs off. After eight hours it clocks off. It has better boundaries than you do.</p>
-          <div class="reward">Reward: the whole map</div>
+        <li class="step orange">
+          <div class="label">03</div>
+          <h3>It knows when to stop</h3>
+          <p>Urgent messages, call requests and &ldquo;are you a bot?&rdquo; get no reply. The bird rings a bell on your laptop instead. If you type in a conversation yourself, it backs off.</p>
         </li>
       </ol>
     </div>
   </section>
 
-  <section>
+  <section class="band pause" id="faq">
     <div class="wrap">
-      <h2 class="display">Loadout</h2>
-      <p class="lede">Pick one before you leave the safehouse.</p>
-      <div class="split">
-        <div class="card">
-          <div class="label">Melee</div>
-          <h3>Y mode</h3>
-          <p>The original. Every message gets the same answer. Historically accurate, professionally fatal.</p>
-          <div class="chat">
-            <div class="them">Dana: can you take the 4pm with legal?</div>
-            <div class="you">You: y</div>
-            <div class="them">Dana: and own the migration?</div>
-            <div class="you">You: y</div>
-          </div>
-        </div>
-        <div class="card">
-          <div class="label">Silenced</div>
-          <h3>Agent mode</h3>
-          <p>Your coding agent writes one short holding reply. It never agrees to a deadline, a meeting or a decision. It knows nothing and commits to less.</p>
-          <div class="chat">
-            <div class="them">Dana: did you get a chance to look at the Q4 deck?</div>
-            <div class="you">You: haven't gotten to it yet, been swamped but will take a look soon</div>
-            <div class="them">Sam: thoughts on the new onboarding flow?</div>
-            <div class="you">You: in the middle of something, will come back to this</div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <section>
-    <div class="wrap wanted-box">
-      <div>
-        <h2 class="display">Wanted level</h2>
-        <p class="lede">The last time someone left a drinking bird in charge, it fell over and the core nearly melted. This bird knows its limits. When the heat rises it says nothing, rings a bell on your laptop and waits for a human.</p>
-        <ul class="triggers">
-          <li><span class="s">★</span>The fourth message in an hour from the same person</li>
-          <li><span class="s">★★</span>&ldquo;Quick call?&rdquo; and its relatives</li>
-          <li><span class="s">★★★</span>Requests to approve, merge or sign off</li>
-          <li><span class="s">★★★</span>Passwords, payments and other secrets</li>
-          <li><span class="s">★★★★</span>Anything urgent, on fire, or down</li>
-          <li><span class="s">★★★★</span>&ldquo;Are you there?&rdquo; and &ldquo;Is this a bot?&rdquo;</li>
-          <li><span class="s">★★★★★</span>&ldquo;Are you playing GTA?&rdquo;</li>
-          <li><span class="s">★★★★★</span>Anything with HR in it</li>
-        </ul>
-      </div>
-      <img src="img/panel-sofa.jpg" width="1536" height="1024" loading="lazy" alt="Hands holding a game controller on a sofa, with a closed laptop ignored on the coffee table and a pink sunset outside">
-    </div>
-  </section>
-
-  <section>
-    <div class="wrap">
-      <h2 class="display">Pause menu</h2>
-      <p class="lede">Questions people ask before they do it anyway.</p>
-      <dl>
+      <div class="kicker label">Game paused</div>
+      <h2 class="h2 display">Pause menu</h2>
+      <dl class="faq">
         <div><dt>Is this a good idea?</dt><dd>No.</dd></div>
-        <div><dt>Why not just send a fake sick note?</dt><dd>Everyone on your team is sending one. Somebody has to look like they are at work. A sick note also runs out after a day, and the map does not.</dd></div>
-        <div><dt>Do you host it? Do you see my messages?</dt><dd>No. It runs on your machine, with a Slack app you create in your own workspace. There is no server. We could not read your messages if we wanted to, and we do not want to.</dd></div>
-        <div><dt>Does it keep my status dot green?</dt><dd>No. Slack decides that from real activity. The bird can answer for you. It cannot be you.</dd></div>
+        <div><dt>Do you host it? Do you see my messages?</dt><dd>No. It runs on your machine, with a Slack app you create in your own workspace. There is no server.</dd></div>
         <div><dt>Will my colleagues notice?</dt><dd>Eventually. That is how the episode ends, too.</dd></div>
-        <div><dt>Can a colleague trick it with a clever message?</dt><dd>The agent runs with no tools, in an empty folder, and anything longer than one plain line is thrown away. They can at most make it say something vague, which is what it does anyway.</dd></div>
-        <div><dt>Does it work after launch day?</dt><dd>Yes. It works any day. It was built for one.</dd></div>
         <div><dt>Will I get fired?</dt><dd>The licence says &ldquo;without warranty of any kind&rdquo;. That covers your job.</dd></div>
       </dl>
     </div>
   </section>
 </main>
 
-<footer>
-  <div class="wrap">MIT licence. A fan joke. Not affiliated with or endorsed by Rockstar Games, Take-Two Interactive, any cartoon, or your employer. Grand Theft Auto and GTA are trademarks of their owner. A drinking bird is a real toy from 1945 and it is very patient.</div>
+<footer class="foot">
+  <div class="wrap">
+    <p class="legal">MIT licence. A fan joke. Not affiliated with or endorsed by Rockstar Games, Take-Two Interactive, any cartoon, or your employer. Grand Theft Auto and GTA are trademarks of their owner.</p>
+  </div>
 </footer>
 
 <script>
-  const copyButton = document.getElementById("copy");
-  const copyText = document.getElementById("copy-text");
-  copyButton.addEventListener("click", async () => {
+  const feed = [["did you see my PR?", "y"], ["on track for friday?", "y"], ["can you own the migration?", "y"], ["PROD IS DOWN", null]];
+  const screen = document.getElementById("screen");
+  let i = 0;
+  function bubble(text, cls) { const b = document.createElement("div"); b.className = "bubble " + cls; b.textContent = text; screen.append(b); while (screen.children.length > 3) screen.firstChild.remove(); }
+  function cycle() { const [q, a] = feed[i++ % feed.length]; bubble(q, ""); setTimeout(() => a ? bubble(a, "me") : bubble("human required", "alarm"), 1650); }
+  cycle(); document.querySelector(".arm").addEventListener("animationiteration", cycle);
+
+  document.getElementById("copy").addEventListener("click", async function () {
+    const label = this.querySelector("span");
     try {
       await navigator.clipboard.writeText(document.getElementById("prompt").textContent);
-      copyText.textContent = "Copied. Go on then.";
-    } catch {
-      copyText.textContent = "Select it by hand, sorry";
+      label.textContent = "Copied";
+    } catch (error) {
+      label.textContent = "Select the prompt by hand";
     }
   });
-
-  // Countdown to the 19th. After that, the page stops pretending.
-  const target = new Date(2026, 10, 19).getTime();
-  const countdown = document.getElementById("countdown");
-  function tick() {
-    const left = target - Date.now();
-    if (left <= 0) {
-      countdown.innerHTML = "<b>Out now</b>Why are you reading a website?";
-      return;
-    }
-    const hours = Math.floor(left / 36e5);
-    countdown.innerHTML = `<b>${Math.floor(hours / 24)}d ${hours % 24}h</b>until GTA VI. Your dentist appointment is confirmed.`;
-  }
-  tick();
-  setInterval(tick, 60000);
-
-  // Subtitles: colleagues write, the bird answers. Dangerous messages raise the wanted level instead.
-  const lines = [
-    ["Dana", "did you see my PR?", "y", 3],
-    ["Sam", "are we still on track for friday?", "y", 3],
-    ["Priya", "can you own the migration?", "y", 3],
-    ["Boss", "vent radioactive gas?", "y", 4],
-    ["Dana", "PROD IS DOWN", null, 5],
-    ["Boss", "you are not playing GTA are you", null, 5],
-    ["Sam", "thanks, you're a star", "y", 3],
-  ];
-  const subs = document.getElementById("subs");
-  const stars = document.getElementById("stars");
-  const starEls = [...stars.children];
-  let index = 0;
-  function show() {
-    const [who, text, reply, level] = lines[index++ % lines.length];
-    subs.textContent = "";
-    const name = document.createElement("em");
-    name.textContent = `${who}: `;
-    subs.append(name, text);
-    setTimeout(() => {
-      subs.append(document.createElement("br"));
-      if (reply) {
-        const you = document.createElement("em");
-        you.textContent = "You: ";
-        subs.append(you, reply);
-      } else {
-        const alarm = document.createElement("span");
-        alarm.className = "alarm";
-        alarm.textContent = "The bird goes silent. Human required.";
-        subs.append(alarm);
-      }
-      starEls.forEach((star, i) => star.classList.toggle("on", i < level));
-      stars.classList.toggle("hot", level === 5);
-      stars.setAttribute("aria-label", `Wanted level: ${level} of 5`);
-    }, 1400);
-  }
-  if (!matchMedia("(prefers-reduced-motion: reduce)").matches) {
-    show();
-    setInterval(show, 4200);
-  }
 </script>
 </body>
 </html>

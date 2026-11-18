@@ -1,0 +1,275 @@
+<!doctype html>
+<html lang="en">
+<head><style data-doop-tokens>:root{--color-ground:#140a20;--color-ground-raised:#221034;--color-ink:#09060e;--color-text:#fff7ef;--color-muted:#d2c2e0;--color-line:rgba(255,255,255,.18);--color-yellow:#ffd23c;--color-pink:#ff3d8b;--color-orange:#ff7a29;--color-teal:#1fe5c9;--color-purple:#7b2cff;--color-keycap:#efe5cf;--color-keycap-shade:#b3a585;--radius-sm:6px;--radius-md:12px;--spacing-gutter:64px;--spacing-gutter-mobile:16px;--font-display:"Anton", Impact, sans-serif;--font-body:"Archivo", system-ui, sans-serif;--font-mono:ui-monospace, Menlo, monospace;--text-label:13px;--text-small:15px;--text-body:18px;--text-h3:32px}</style>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Drinking Bird: covers your Slack on GTA VI launch day</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Archivo:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
+html { background:var(--color-ground); }
+body { background:var(--color-ground); color:var(--color-text); font:500 var(--text-body)/1.55 var(--font-body); -webkit-font-smoothing:antialiased; overflow-x:hidden; }
+.display { font-family:var(--font-display); font-weight:400; text-transform:uppercase; line-height:.92; letter-spacing:.01em; }
+.label { font:700 var(--text-label)/1.3 var(--font-body); letter-spacing:.18em; text-transform:uppercase; }
+.out { text-shadow:0 2px 0 var(--color-ink), 2px 0 0 var(--color-ink), -2px 0 0 var(--color-ink), 0 -2px 0 var(--color-ink), 0 4px 14px rgba(0,0,0,.6); }
+.wrap { max-width:1440px; margin:0 auto; padding:0 var(--spacing-gutter); }
+
+/* ---------- Hero ---------- */
+.hero { position:relative; height:900px; overflow:hidden; isolation:isolate; }
+
+/* ---- hero stage: layered artwork, sized like background-size: cover ---- */
+#hero-stage { position: absolute; inset: 0; overflow: hidden; container-type: size; background: #1a1420; }
+.plate {
+  --w: max(100cqw, 100cqh * 1672 / 941);
+  position: absolute; bottom: 0; width: var(--w); aspect-ratio: 1672 / 941;
+  /* keep the bird and the Y key (about 42% across) in view on narrow screens */
+  left: clamp(100cqw - var(--w), 50cqw - 0.39 * var(--w), 0px);
+}
+.plate > img.bg { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+/* Layer positions are percentages of the plate, so they scale with it. */
+.stand { position: absolute; left: 26.1%; top: 68.7%; width: 11.7%; z-index: 2; }
+.arm {
+  position: absolute; left: 26.9%; top: 36%; width: 14.5%; z-index: 3;
+  transform-origin: 34.7% 52.6%;
+  animation: dip 3.6s cubic-bezier(.5, 0, .3, 1) infinite;
+}
+.glow {
+  position: absolute; left: 43.2%; top: 78%; width: 6.4%; aspect-ratio: 1.5; z-index: 1; border-radius: 50%;
+  background: radial-gradient(closest-side, rgba(255, 226, 90, .95), rgba(255, 226, 90, 0));
+  opacity: 0; animation: tap 3.6s linear infinite; mix-blend-mode: screen;
+}
+.plus {
+  position: absolute; left: 45.2%; top: 72%; z-index: 4; font: 400 3.2cqw/1 "Anton", Impact, sans-serif; color: #ffd23c;
+  text-shadow: 0 2px 0 #07080a, 2px 0 0 #07080a, -2px 0 0 #07080a, 0 -2px 0 #07080a;
+  opacity: 0; animation: rise 3.6s ease-out infinite;
+}
+.screen {
+  position: absolute; left: 78.2%; top: 28.5%; width: 19.6%; height: 27%; z-index: 2;
+  transform: skewY(-3.2deg); display: flex; flex-direction: column; justify-content: flex-end; gap: 6%; padding: 4% 5%;
+  font: 700 1.3cqw/1.2 "Archivo", system-ui, sans-serif;
+}
+.bubble { max-width: 86%; padding: .5em .8em; border-radius: 1em; background: #0c2f2a; color: #d9fff5; animation: pop .35s cubic-bezier(.2, 1.6, .4, 1) both; }
+.bubble.me { align-self: flex-end; background: #ffd23c; color: #07080a; }
+.bubble.alarm { align-self: flex-end; background: #ff4f9a; color: #07080a; }
+
+@keyframes dip {
+  0%, 26%   { transform: rotate(-9deg); }
+  44%, 50%  { transform: rotate(73deg); }
+  68%       { transform: rotate(-16deg); }
+  82%       { transform: rotate(-5deg); }
+  100%      { transform: rotate(-9deg); }
+}
+@keyframes tap { 0%, 43% { opacity: 0; transform: scale(.4); } 46% { opacity: 1; transform: scale(1); } 60%, 100% { opacity: 0; transform: scale(1.5); } }
+@keyframes rise { 0%, 44% { opacity: 0; transform: translateY(0); } 48% { opacity: 1; } 75%, 100% { opacity: 0; transform: translateY(-160%); } }
+@keyframes pop { from { opacity: 0; transform: scale(.6); } }
+@media (prefers-reduced-motion: reduce) { .arm, .glow, .plus, .bubble { animation: none; } }
+/* ---- end of hero stage ---- */
+
+.shade { position:absolute; inset:0 0 auto; height:420px; z-index:1; pointer-events:none; background:linear-gradient(180deg, rgba(9,6,14,.82) 0%, rgba(9,6,14,.5) 45%, rgba(9,6,14,0) 100%); }
+.top { position:absolute; z-index:3; left:var(--spacing-gutter); right:var(--spacing-gutter); top:32px; display:flex; justify-content:space-between; align-items:flex-start; gap:24px; }
+.brand { font-size:36px; }
+.brand small { display:flex; align-items:center; gap:8px; margin-top:10px; color:var(--color-teal); font:700 var(--text-label)/1 var(--font-body); letter-spacing:.18em; }
+.dot { width:9px; height:9px; border-radius:50%; background:var(--color-teal); box-shadow:0 0 12px var(--color-teal); }
+.wanted { text-align:right; }
+.stars { font-size:44px; letter-spacing:6px; line-height:1; }
+.stars span { display:inline-block; }
+.stars .on { color:var(--color-text); }
+.stars .off { opacity:.25; }
+.wanted .label { margin-top:8px; }
+.banner { position:absolute; z-index:3; left:0; right:0; top:84px; display:flex; flex-direction:column; align-items:center; text-align:center; padding:0 24px; }
+.tag { display:inline-block; padding:8px 16px; background:var(--color-pink); color:var(--color-ink); transform:skewX(-12deg); box-shadow:5px 5px 0 var(--color-ink); text-shadow:none; }
+.tag span { display:inline-block; transform:skewX(12deg); }
+.mp { margin-top:20px; font-size:132px; color:var(--color-yellow); transform:rotate(-2deg); text-shadow:-3px -3px 0 var(--color-ink), 3px -3px 0 var(--color-ink), -3px 3px 0 var(--color-ink), 3px 3px 0 var(--color-ink), 0 9px 0 var(--color-pink), 0 16px 0 var(--color-purple), 0 22px 50px rgba(255,61,139,.5); }
+.sub { margin-top:26px; font-size:42px; }
+.sub b { color:var(--color-teal); font-weight:400; }
+
+.panel { position:absolute; z-index:3; right:var(--spacing-gutter); bottom:28px; width:460px; padding:22px 22px 20px; background:rgba(9,6,14,.86); border:2px solid var(--color-ink); border-top:4px solid var(--color-yellow); border-radius:var(--radius-md); box-shadow:8px 8px 0 var(--color-ink); }
+.pitch { font-size:var(--text-small); line-height:1.5; }
+.cta { display:flex; flex-wrap:wrap; align-items:center; gap:12px 20px; margin-top:18px; }
+.btn { font:800 15px/1 var(--font-body); letter-spacing:.06em; text-transform:uppercase; cursor:pointer; display:inline-flex; align-items:center; gap:12px; height:54px; padding:0 20px 0 8px; border-radius:var(--radius-sm); border:3px solid var(--color-ink); background:var(--color-yellow); color:var(--color-ink); box-shadow:0 5px 0 var(--color-ink); transition:transform .15s ease, box-shadow .15s ease; }
+.btn:hover { transform:translateY(-2px); box-shadow:0 7px 0 var(--color-ink), 0 0 28px rgba(255,210,60,.5); }
+.btn:active { transform:translateY(4px); box-shadow:0 1px 0 var(--color-ink); }
+.btn:focus-visible, .link:focus-visible { outline:3px solid var(--color-teal); outline-offset:4px; }
+.key { display:inline-grid; place-items:center; width:36px; height:36px; border-radius:6px; background:var(--color-keycap); color:var(--color-ink); font:400 21px/1 var(--font-display); border:1px solid var(--color-keycap-shade); box-shadow:0 3px 0 var(--color-keycap-shade); }
+.link { color:var(--color-text); font-weight:700; font-size:var(--text-small); text-decoration:underline; text-decoration-color:var(--color-teal); text-decoration-thickness:2px; text-underline-offset:5px; }
+.link:hover { color:var(--color-teal); }
+.prompt { margin-top:18px; padding:10px 14px; background:var(--color-ink); border:1px solid var(--color-line); border-left:4px solid var(--color-teal); border-radius:var(--radius-sm); font:500 13px/1.5 var(--font-mono); color:var(--color-muted); overflow-wrap:anywhere; }
+
+/* ---------- Sections ---------- */
+.band { padding:72px 0 80px; }
+.kicker { display:inline-flex; align-items:center; gap:10px; color:var(--color-teal); }
+.kicker::before { content:""; width:28px; height:3px; background:currentColor; }
+.h2 { margin-top:12px; font-size:64px; color:var(--color-yellow); text-shadow:4px 4px 0 var(--color-pink), 8px 8px 0 var(--color-purple); }
+.how { background:radial-gradient(ellipse 45% 60% at 90% 0%, rgba(123,44,255,.32), transparent 70%), var(--color-ground); border-top:4px solid var(--color-ink); }
+.steps { list-style:none; display:grid; grid-template-columns:repeat(3,1fr); gap:28px; margin-top:40px; }
+.step { --accent:var(--color-teal); position:relative; overflow:hidden; padding:30px 28px 30px; background:var(--color-ground-raised); border:2px solid var(--color-line); border-radius:var(--radius-md); }
+.step::before { content:""; position:absolute; left:0; right:0; top:0; height:6px; background:var(--accent); }
+.step.pink { --accent:var(--color-pink); } .step.orange { --accent:var(--color-orange); }
+.step .label { color:var(--accent); }
+.step h3 { margin-top:14px; font:400 var(--text-h3)/1.02 var(--font-display); text-transform:uppercase; }
+.step p { margin-top:14px; color:var(--color-muted); font-size:17px; }
+
+.pause { background:var(--color-ground-raised); border-top:4px solid var(--color-ink); }
+.faq { margin-top:36px; border-top:3px solid var(--color-text); }
+.faq > div { display:grid; grid-template-columns:1fr 1.4fr; gap:32px; padding:16px 20px; border-bottom:1px solid var(--color-line); transition:background .2s ease, color .2s ease; }
+.faq > div:hover { background:var(--color-yellow); color:var(--color-ink); }
+.faq dt { font-weight:800; font-size:19px; line-height:1.4; }
+.faq dd { color:var(--color-muted); font-size:17px; }
+.faq > div:hover dd { color:var(--color-ink); }
+
+.foot { padding:40px 0 48px; background:var(--color-ground); border-top:4px solid var(--color-ink); }
+.legal { max-width:860px; color:var(--color-muted); font-size:14px; line-height:1.6; }
+
+/* ---------- Motion: headline slams in once, lit stars pulse ---------- */
+@media (prefers-reduced-motion: no-preference) {
+  .mp { animation:slam .75s cubic-bezier(.2,1.3,.4,1) .2s both; }
+  .stars .on { animation:pulse 2.4s ease-in-out infinite; }
+  .stars .on:nth-child(2) { animation-delay:.2s; } .stars .on:nth-child(3) { animation-delay:.4s; }
+}
+@keyframes slam { 0% { opacity:0; transform:scale(2.6) rotate(-9deg); } 55% { opacity:1; transform:scale(.92) rotate(-1deg); } 75% { transform:scale(1.05) rotate(-2.5deg); } 100% { opacity:1; transform:scale(1) rotate(-2deg); } }
+@keyframes pulse { 0%, 100% { opacity:1; transform:scale(1); } 50% { opacity:.65; transform:scale(.92); } }
+@media (prefers-reduced-motion: reduce) {
+  .mp, .stars .on { animation:none; }
+  .btn, .btn:hover, .btn:active { transition:none; transform:none; }
+}
+
+/* ---------- Phone ---------- */
+@media (max-width: 600px) {
+  .wrap { padding:0 var(--spacing-gutter-mobile); }
+  .hero { height:auto; display:flex; flex-direction:column; background:var(--color-ground); }
+  .shade { display:none; }
+  .top, .banner, .panel { position:relative; left:auto; right:auto; top:auto; bottom:auto; }
+  .top { padding:20px var(--spacing-gutter-mobile) 0; gap:12px; }
+  .brand { font-size:24px; }
+  .brand small { margin-top:6px; font-size:10px; letter-spacing:.12em; }
+  .stars { font-size:24px; letter-spacing:2px; }
+  .wanted .label { font-size:10px; letter-spacing:.1em; margin-top:4px; }
+  .banner { padding:32px var(--spacing-gutter-mobile) 36px; }
+  .tag { font-size:11px; padding:7px 12px; }
+  .mp { margin-top:18px; font-size:74px; line-height:.9; text-shadow:-2px -2px 0 var(--color-ink), 2px -2px 0 var(--color-ink), -2px 2px 0 var(--color-ink), 2px 2px 0 var(--color-ink), 0 6px 0 var(--color-pink), 0 11px 0 var(--color-purple); }
+  .sub { margin-top:20px; font-size:30px; }
+  .top { order:1; } .banner { order:2; } #hero-stage { order:3; } .panel { order:4; }
+  #hero-stage { position:relative; inset:auto; height:420px; flex:none; }
+  .panel { width:auto; margin:20px var(--spacing-gutter-mobile) 0; box-shadow:6px 6px 0 var(--color-ink); }
+  .cta { flex-direction:column; align-items:stretch; gap:16px; }
+  .btn { justify-content:flex-start; }
+  .link { align-self:center; }
+  .band { padding:64px 0; }
+  .h2 { font-size:56px; text-shadow:3px 3px 0 var(--color-pink), 6px 6px 0 var(--color-purple); }
+  .steps { grid-template-columns:1fr; gap:18px; margin-top:32px; }
+  .step { padding:26px 22px 24px; }
+  .step h3 { font-size:28px; }
+  .step p { font-size:16px; }
+  .faq { margin-top:32px; }
+  .faq > div { grid-template-columns:1fr; gap:6px; padding:16px 12px; }
+  .faq dt { font-size:17px; }
+  .faq dd { font-size:16px; }
+  .foot { padding:32px 0 40px; }
+  .legal { font-size:13px; }
+}
+</style>
+</head>
+<body>
+<header class="hero" id="top">
+  <div id="hero-stage" data-slot="animated-hero" aria-hidden="true">
+    <div class="plate">
+      <img class="bg" src="https://doop.design/a/1weOMxiPj6.jpg" alt="">
+      <div class="glow"></div>
+      <img class="stand" src="https://doop.design/a/hKIvzkuth9.webp" alt="">
+      <img class="arm" src="https://doop.design/a/e-pt2aqK9N.webp" alt="">
+      <div class="plus">+Y</div>
+      <div class="screen" id="screen"></div>
+    </div>
+  </div>
+  <div class="shade" aria-hidden="true"></div>
+
+  <div class="top out">
+    <div class="brand display">Drinking Bird<small><span class="dot"></span>Slack cover · active</small></div>
+    <div class="wanted">
+      <div class="stars" aria-label="Wanted level: 3 of 5"><span class="on">★</span><span class="on">★</span><span class="on">★</span><span class="off">★</span><span class="off">★</span></div>
+      <div class="label">Wanted by your manager</div>
+    </div>
+  </div>
+
+  <div class="banner out">
+    <div class="tag label"><span>GTA VI · 19 November 2026</span></div>
+    <h1 class="mp display">Mission passed</h1>
+    <div class="sub display">Looked busy <b>+100</b></div>
+  </div>
+
+  <div class="panel">
+    <p class="pitch">GTA VI is out. You have a job. Drinking Bird answers your Slack with plausible, non-committal replies while you are &ldquo;working from home&rdquo;. It is open source, runs on your laptop, and uses the coding agent you already have.</p>
+    <div class="cta">
+      <button class="btn" id="copy" type="button"><kbd class="key">Y</kbd><span>Copy the setup prompt</span></button>
+      <a class="link" href="https://github.com/manuel114/drinking-bird">Read the source</a>
+    </div>
+    <div class="prompt" id="prompt">Clone https://github.com/manuel114/drinking-bird, read AGENTS.md and set it up for me. Start with a dry run.</div>
+  </div>
+</header>
+
+<main>
+  <section class="band how" id="how">
+    <div class="wrap">
+      <div class="kicker label">Three steps</div>
+      <h2 class="h2 display">How it works</h2>
+      <ol class="steps">
+        <li class="step">
+          <div class="label">01</div>
+          <h3>Hand it to your coding agent</h3>
+          <p>Claude Code, Codex, or anything that takes a prompt. It clones the repo, walks you through a small Slack app, and starts the bird in a dry run.</p>
+        </li>
+        <li class="step pink">
+          <div class="label">02</div>
+          <h3>The bird answers for you</h3>
+          <p>Direct messages and @mentions only. It waits 25 to 90 seconds, then replies as you. It never agrees to a deadline, a meeting or a decision.</p>
+        </li>
+        <li class="step orange">
+          <div class="label">03</div>
+          <h3>It knows when to stop</h3>
+          <p>Urgent messages, call requests and &ldquo;are you a bot?&rdquo; get no reply. The bird rings a bell on your laptop instead. If you type in a conversation yourself, it backs off.</p>
+        </li>
+      </ol>
+    </div>
+  </section>
+
+  <section class="band pause" id="faq">
+    <div class="wrap">
+      <div class="kicker label">Game paused</div>
+      <h2 class="h2 display">Pause menu</h2>
+      <dl class="faq">
+        <div><dt>Is this a good idea?</dt><dd>No.</dd></div>
+        <div><dt>Do you host it? Do you see my messages?</dt><dd>No. It runs on your machine, with a Slack app you create in your own workspace. There is no server.</dd></div>
+        <div><dt>Will my colleagues notice?</dt><dd>Eventually. That is how the episode ends, too.</dd></div>
+        <div><dt>Will I get fired?</dt><dd>The licence says &ldquo;without warranty of any kind&rdquo;. That covers your job.</dd></div>
+      </dl>
+    </div>
+  </section>
+</main>
+
+<footer class="foot">
+  <div class="wrap">
+    <p class="legal">MIT licence. A fan joke. Not affiliated with or endorsed by Rockstar Games, Take-Two Interactive, any cartoon, or your employer. Grand Theft Auto and GTA are trademarks of their owner.</p>
+  </div>
+</footer>
+
+<script>
+  const feed = [["did you see my PR?", "y"], ["on track for friday?", "y"], ["can you own the migration?", "y"], ["PROD IS DOWN", null]];
+  const screen = document.getElementById("screen");
+  let i = 0;
+  function bubble(text, cls) { const b = document.createElement("div"); b.className = "bubble " + cls; b.textContent = text; screen.append(b); while (screen.children.length > 3) screen.firstChild.remove(); }
+  function cycle() { const [q, a] = feed[i++ % feed.length]; bubble(q, ""); setTimeout(() => a ? bubble(a, "me") : bubble("human required", "alarm"), 1650); }
+  cycle(); document.querySelector(".arm").addEventListener("animationiteration", cycle);
+
+  document.getElementById("copy").addEventListener("click", async function () {
+    const label = this.querySelector("span");
+    try {
+      await navigator.clipboard.writeText(document.getElementById("prompt").textContent);
+      label.textContent = "Copied";
+    } catch (error) {
+      label.textContent = "Select the prompt by hand";
+    }
+  });
+</script>
+</body>
+</html>
