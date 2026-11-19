@@ -1,0 +1,9 @@
+{
+  "name": "drinking-bird",
+  "version": "0.2.0",
+  "description": "Skills that let your coding agent cover your Slack, email and Teams with holding replies on GTA VI launch day.",
+  "author": { "name": "manuel114" },
+  "homepage": "https://github.com/manuel114/drinking-bird",
+  "repository": "https://github.com/manuel114/drinking-bird",
+  "license": "MIT"
+}

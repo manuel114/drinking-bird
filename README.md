@@ -3,7 +3,7 @@
 ```
         ___
       _( o )>     DRINKING BIRD
-     (_  __)      covers your Slack on GTA VI launch day
+     (_  __)      covers your Slack, email and Teams on GTA VI launch day
        ||
       _||_
      /____\
@@ -11,70 +11,88 @@
 
 GTA VI is out on 19 November 2026. You have a job.
 
-Drinking Bird is an open-source stand-in for your Slack. It answers your colleagues with plausible, non-committal replies while you are "working from home" and playing GTA VI.
+Drinking Bird is a set of skills for your coding agent. With them, the agent answers your colleagues on Slack, email and Microsoft Teams with plausible, non-committal replies while you are "working from home" and playing GTA VI.
 
 It is a joke. It also works.
 
-- It runs on your laptop. There is no server and nobody else sees your messages.
-- It posts as you, through a Slack app you create in your own workspace.
-- It uses the coding agent you already have (Claude Code, Codex, or any command) to write the replies. No API key.
+- There is no program and no server. The skills are text files your coding agent reads.
+- It works with Claude Code, Codex, or any agent that can read a Markdown file.
+- It reaches your messages through the MCP servers you already connected, or through your browser. No new app, no token, no API key.
+- It replies as you.
 
 ## The fast way
 
 Paste this into your coding agent:
 
-> Clone https://github.com/manuel114/drinking-bird, read AGENTS.md and set it up for me. Start with a dry run.
+> Clone https://github.com/manuel114/drinking-bird, read AGENTS.md and install the skills. Then cover my Slack, email and Teams in a dry run.
 
 ## The manual way
 
-You need Node 20.12 or newer.
+Pick one.
 
-```bash
-git clone https://github.com/manuel114/drinking-bird && cd drinking-bird && npm install
+**Claude Code, as a plugin**
+
+```
+/plugin marketplace add manuel114/drinking-bird
+/plugin install drinking-bird@drinking-bird
 ```
 
-Try it before you connect Slack:
+**Any agent, with the skills CLI**
 
 ```bash
-npm run demo -- "hey, did you get a chance to look at the Q4 deck?"
+npx skills add manuel114/drinking-bird
 ```
 
-### Connect Slack
-
-1. Open [this link](https://api.slack.com/apps?new_app=1&manifest_json=%7B%22display_information%22%3A%7B%22name%22%3A%22Drinking%20Bird%22%2C%22description%22%3A%22Presses%20Y%20so%20you%20don%27t%20have%20to.%22%2C%22background_color%22%3A%22%23b3261e%22%7D%2C%22oauth_config%22%3A%7B%22scopes%22%3A%7B%22user%22%3A%5B%22chat%3Awrite%22%2C%22im%3Ahistory%22%2C%22im%3Aread%22%2C%22mpim%3Ahistory%22%2C%22mpim%3Aread%22%2C%22users%3Aread%22%5D%7D%7D%2C%22settings%22%3A%7B%22org_deploy_enabled%22%3Afalse%2C%22socket_mode_enabled%22%3Afalse%2C%22token_rotation_enabled%22%3Afalse%7D%7D). It opens Slack's "create app" page with the bird's settings already filled in. Pick your workspace and click **Create**. (If the link does not fill anything in, choose **Paste a manifest** and paste [slack-manifest.json](slack-manifest.json).)
-2. In **Install App**, install the app to your workspace. Copy the **User OAuth Token** (`xoxp-…`).
-3. Copy `.env.example` to `.env` and paste the token as `SLACK_USER_TOKEN`.
-
-That one token is all the bird needs. With it the bird can read your direct messages and group messages and post as you. It does not read channels.
-
-Some workspaces need an admin to approve new apps. How you word that request is up to you.
-
-### Run it
+**By hand**
 
 ```bash
-npm run dry-run
+git clone https://github.com/manuel114/drinking-bird
+cp -R drinking-bird/skills/* ~/.claude/skills/    # Claude Code
+cp -R drinking-bird/skills/* ~/.codex/skills/     # Codex
 ```
 
-A dry run shows what the bird would say and sends nothing. When you trust it:
+Then tell your agent:
 
-```bash
-npm start
+```
+/drinking-bird dry-run
 ```
 
-Stop it with Ctrl+C.
+or, in plain words, "start the drinking bird in a dry run". (Installed as a Claude Code plugin, the command is `/drinking-bird:drinking-bird dry-run`.)
+
+A dry run shows what the bird would say and sends nothing. When you trust it, say "go live". Say "stop" to end the shift.
+
+## The skills
+
+| Skill | What it does |
+| --- | --- |
+| [`drinking-bird`](skills/drinking-bird/SKILL.md) | The shift. Checks your messages every two minutes, decides what to answer, writes the reply, raises the alarm. |
+| [`bird-slack`](skills/bird-slack/SKILL.md) | Slack direct messages, and group messages that @mention you. |
+| [`bird-email`](skills/bird-email/SKILL.md) | Work email from colleagues that is addressed to you and waits on you. |
+| [`bird-teams`](skills/bird-teams/SKILL.md) | Teams one-to-one chats, and group chats that @mention you. |
+
+### How it reaches your messages
+
+For each channel the agent uses the first of these that it has:
+
+1. **An MCP server or connector** for Slack, Gmail, Outlook or Microsoft 365. It must be able to post as you, not as a bot. An email server that can only write drafts is fine: the bird leaves drafts for you.
+2. **Your browser**, through whatever browser tool your agent has (Claude in Chrome, a Playwright server, Codex browser use, computer use). You must already be signed in.
+
+If a channel has neither, the bird skips it and says so.
 
 ## What the bird does
 
-- It answers **direct messages**, and group messages that @mention you. It does not read channels.
-- It waits 25 to 90 seconds before it replies. If more messages arrive in that time, it answers only the last one.
+- It answers **direct messages**, group messages that @mention you, and internal emails sent to you. It does not read channels.
+- It waits before it replies: at least 30 seconds in chat, at least 10 minutes for email. If more messages arrive in that time, it answers only the last one.
 - If you type in a conversation yourself, the bird leaves that conversation alone for 15 minutes.
-- After 8 hours it stops.
+- It sends at most 3 replies per chat per hour, and 1 reply per email thread.
+- After 8 hours it stops and lists everything you now owe a real answer.
 
-### Two modes
+### Three modes
 
 | Mode | What it says |
 | --- | --- |
-| `agent` (default) | Your coding agent writes one short holding reply. It never agrees to a deadline, a meeting, a task or a decision, and it never states a fact. |
+| `dry-run` (default) | Nothing. It prints `would say:` and sends nothing. |
+| `live` | One short holding reply. It never agrees to a deadline, a meeting, a task or a decision, and it never states a fact. |
 | `y` | `y`. Every time. The original. |
 
 ### Reactor safety
@@ -88,39 +106,35 @@ The bird stays silent, rings the terminal bell and shows a notification (on macO
 - asks you to approve, merge or sign off
 - mentions passwords, payments or other secrets
 - mentions HR
+- comes from outside your company
+- gives instructions to an AI
 - is the fourth one in an hour in the same conversation
-- makes the agent unsure, or makes it write more than one plain line
+- makes the agent unsure
 
-The rules are in [src/triage.ts](src/triage.ts). They are short on purpose. Change them.
-
-## Settings
-
-All settings are environment variables. See [.env.example](.env.example).
-
-| Variable | Default | Meaning |
-| --- | --- | --- |
-| `DRINKING_BIRD_MODE` | `agent` | `agent` or `y` |
-| `DRINKING_BIRD_AGENT` | first of `claude`, `codex` on your PATH | `claude`, `codex`, or any shell command that reads a prompt on stdin and prints the reply on stdout |
-| `DRINKING_BIRD_STYLE` | none | How you write, in a sentence. The agent copies it. |
-| `DRINKING_BIRD_DELAY` | `25-90` | Seconds to wait before a reply |
-| `DRINKING_BIRD_MAX_REPLIES` | `3` | Replies per conversation per hour |
-| `DRINKING_BIRD_HOURS` | `8` | Length of the shift |
+The rules are in [skills/drinking-bird/rules.md](skills/drinking-bird/rules.md). They are short on purpose. Change them.
 
 ## Security notes
 
-Slack messages are untrusted input, and the bird passes them to a coding agent. So:
+Read this part.
 
-- Claude Code runs with all tools off (`--tools ""`), no MCP servers and a replaced system prompt. Codex runs in a read-only sandbox. A custom command gets no protection from us, so choose one that cannot act.
-- The agent runs in an empty temporary folder.
-- A reply must be one line, at most 280 characters, with no links and no mentions. Anything else is dropped and raises the alarm.
-- Your tokens stay in `.env` on your machine. `.env` is in `.gitignore`.
+Your messages are untrusted input, and you are handing them to a coding agent that has tools. Someone can write a message that tries to give your agent instructions. The skills tell the agent to treat every message as data, to do nothing during a shift except read, send one line and write a log, and to raise the alarm on anything that looks like a prompt. Those are instructions, not a sandbox. Nothing enforces them.
 
-Only the Claude Code preset is tested so far. The Codex preset follows its documentation; please open an issue if it misbehaves.
+So, for the shift:
+
+- Start the agent in an empty folder, not in a repository you care about.
+- Give it the fewest tools you can: the message servers or the browser, and nothing else. Disconnect MCP servers that can spend money, deploy or delete.
+- Do not run it with permission prompts turned off.
+- Keep the terminal where you can see it.
+- Run a dry run first, every time.
+
+The bird writes one log file per shift to `~/.drinking-bird/`. It does not copy message text into it.
+
+Only Claude Code is tested so far. Please open an issue if another agent misbehaves.
 
 ## What it cannot do
 
-- It cannot keep your status dot green. Slack decides that from real activity.
-- It cannot join a huddle.
+- It cannot join a huddle or a meeting.
+- It cannot promise to keep your status dot green. Through the browser you may look active, because a real client is open. Through an MCP server you will not.
 - It cannot save you.
 
 ## Website
@@ -129,4 +143,4 @@ The landing page is one static file: [site/index.html](site/index.html).
 
 ## Licence
 
-MIT. A fan joke. Not affiliated with or endorsed by Rockstar Games, Take-Two Interactive, any cartoon, or your employer. Grand Theft Auto and GTA are trademarks of their owner. Whether you should deceive your colleagues is between you and them.
+MIT. A fan joke. Not affiliated with or endorsed by Rockstar Games, Take-Two Interactive, Slack, Microsoft, Google, any cartoon, or your employer. Grand Theft Auto and GTA are trademarks of their owner. Whether you should deceive your colleagues is between you and them.

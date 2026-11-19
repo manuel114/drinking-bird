@@ -3,8 +3,8 @@
 <head><style data-doop-tokens>:root{--color-ground:#140a20;--color-ground-raised:#221034;--color-ink:#09060e;--color-text:#fff7ef;--color-muted:#d2c2e0;--color-line:rgba(255,255,255,.18);--color-yellow:#ffd23c;--color-pink:#ff3d8b;--color-orange:#ff7a29;--color-teal:#1fe5c9;--color-purple:#7b2cff;--color-keycap:#efe5cf;--color-keycap-shade:#b3a585;--radius-sm:6px;--radius-md:12px;--spacing-gutter:64px;--spacing-gutter-mobile:16px;--font-display:"Anton", Impact, sans-serif;--font-body:"Archivo", system-ui, sans-serif;--font-mono:ui-monospace, Menlo, monospace;--text-label:13px;--text-small:15px;--text-body:18px;--text-h3:32px}</style>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Drinking Bird — covers your Slack on GTA VI launch day</title>
-<meta name="description" content="GTA VI is out on 19 November 2026. Drinking Bird answers your Slack while you are 'working from home'.">
+<title>Drinking Bird — covers your Slack, email and Teams on GTA VI launch day</title>
+<meta name="description" content="GTA VI is out on 19 November 2026. Drinking Bird is a set of skills for your coding agent. It answers your Slack, email and Teams while you are 'working from home'.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Anton&family=Archivo:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
@@ -111,6 +111,10 @@ body { background:var(--color-ground); color:var(--color-text); font:500 var(--t
 .step h3 { margin-top:14px; font:400 var(--text-h3)/1.02 var(--font-display); text-transform:uppercase; }
 .step p { margin-top:14px; color:var(--color-muted); font-size:17px; }
 
+.ad { background:var(--color-ground-raised); border-top:4px solid var(--color-ink); }
+.ad .lede { margin-top:22px; max-width:640px; color:var(--color-muted); }
+.film { display:block; width:100%; max-width:1080px; height:auto; aspect-ratio:16 / 9; margin-top:36px; background:var(--color-ink); border:3px solid var(--color-ink); border-top:6px solid var(--color-yellow); border-radius:var(--radius-md); box-shadow:10px 10px 0 var(--color-ink); }
+.film:focus-visible { outline:3px solid var(--color-teal); outline-offset:4px; }
 .pause { background:var(--color-ground-raised); border-top:4px solid var(--color-ink); }
 .faq { margin-top:36px; border-top:3px solid var(--color-text); }
 .faq > div { display:grid; grid-template-columns:1fr 1.4fr; gap:32px; padding:16px 20px; border-bottom:1px solid var(--color-line); transition:background .2s ease, color .2s ease; }
@@ -163,6 +167,7 @@ body { background:var(--color-ground); color:var(--color-text); font:500 var(--t
   .step { padding:26px 22px 24px; }
   .step h3 { font-size:28px; }
   .step p { font-size:16px; }
+  .film { margin-top:28px; box-shadow:6px 6px 0 var(--color-ink); }
   .faq { margin-top:32px; }
   .faq > div { grid-template-columns:1fr; gap:6px; padding:16px 12px; }
   .faq dt { font-size:17px; }
@@ -187,7 +192,7 @@ body { background:var(--color-ground); color:var(--color-text); font:500 var(--t
   <div class="shade" aria-hidden="true"></div>
 
   <div class="top out">
-    <div class="brand display">Drinking Bird<small><span class="dot"></span>Slack cover · active</small></div>
+    <div class="brand display">Drinking Bird<small><span class="dot"></span>Inbox cover · active</small></div>
     <div class="wanted">
       <div class="stars" aria-label="Wanted level: 3 of 5"><span class="on">★</span><span class="on">★</span><span class="on">★</span><span class="off">★</span><span class="off">★</span></div>
       <div class="label">Wanted by your manager</div>
@@ -201,16 +206,28 @@ body { background:var(--color-ground); color:var(--color-text); font:500 var(--t
   </div>
 
   <div class="panel">
-    <p class="pitch">GTA VI is out. You have a job. Drinking Bird answers your Slack with plausible, non-committal replies while you are &ldquo;working from home&rdquo;. It is open source, runs on your laptop, and uses the coding agent you already have.</p>
+    <p class="pitch">GTA VI is out. You have a job. Drinking Bird is a set of skills for your coding agent. It answers your Slack, email and Teams with plausible, non-committal replies while you are &ldquo;working from home&rdquo;. Open source. No server, no tokens.</p>
     <div class="cta">
       <button class="btn" id="copy" type="button"><kbd class="key">Y</kbd><span>Copy the setup prompt</span></button>
       <a class="link" href="https://github.com/manuel114/drinking-bird">Read the source</a>
     </div>
-    <div class="prompt" id="prompt">Clone https://github.com/manuel114/drinking-bird, read AGENTS.md and set it up for me. Start with a dry run.</div>
+    <div class="prompt" id="prompt">Clone https://github.com/manuel114/drinking-bird, read AGENTS.md and install the skills. Then cover my Slack, email and Teams in a dry run.</div>
   </div>
 </header>
 
 <main>
+  <section class="band ad" id="ad">
+    <div class="wrap">
+      <div class="kicker label">As seen on your couch</div>
+      <h2 class="h2 display">Ask your doctor</h2>
+      <p class="lede">Your doctor will not know what this is. 54 seconds, with sound.</p>
+      <video class="film" controls playsinline preload="none" poster="media/drinking-bird-ad-poster.jpg" width="1280" height="720" aria-label="Drinking Bird advert, a parody of a medicine commercial">
+        <source src="media/drinking-bird-ad.mp4" type="video/mp4">
+        <a href="media/drinking-bird-ad.mp4">Watch the Drinking Bird advert</a>
+      </video>
+    </div>
+  </section>
+
   <section class="band how" id="how">
     <div class="wrap">
       <div class="kicker label">Three steps</div>
@@ -219,17 +236,17 @@ body { background:var(--color-ground); color:var(--color-text); font:500 var(--t
         <li class="step">
           <div class="label">01</div>
           <h3>Hand it to your coding agent</h3>
-          <p>Claude Code, Codex, or anything that takes a prompt. It clones the repo, walks you through a small Slack app, and starts the bird in a dry run.</p>
+          <p>Claude Code, Codex, or anything that reads a Markdown file. It installs four skills and starts the bird in a dry run. There is no program to run and no app to create.</p>
         </li>
         <li class="step pink">
           <div class="label">02</div>
           <h3>The bird answers for you</h3>
-          <p>Direct messages only. It waits 25 to 90 seconds, then replies as you. It never agrees to a deadline, a meeting or a decision.</p>
+          <p>Slack, email and Teams, through the MCP servers you already connected or through your browser. Direct messages and emails sent to you, never channels. It waits, then replies as you. It never agrees to a deadline, a meeting or a decision.</p>
         </li>
         <li class="step orange">
           <div class="label">03</div>
           <h3>It knows when to stop</h3>
-          <p>Urgent messages, call requests and &ldquo;are you a bot?&rdquo; get no reply. The bird rings a bell on your laptop instead. If you type in a conversation yourself, it backs off.</p>
+          <p>Urgent messages, call requests and &ldquo;are you a bot?&rdquo; get no reply. The bird rings a bell on your laptop instead. If you type in a conversation yourself, it backs off. After 8 hours it lists what you owe a real answer.</p>
         </li>
       </ol>
     </div>
@@ -241,7 +258,8 @@ body { background:var(--color-ground); color:var(--color-text); font:500 var(--t
       <h2 class="h2 display">Pause menu</h2>
       <dl class="faq">
         <div><dt>Is this a good idea?</dt><dd>No.</dd></div>
-        <div><dt>Do you host it? Do you see my messages?</dt><dd>No. It runs on your machine, with a Slack app you create in your own workspace. There is no server.</dd></div>
+        <div><dt>Do you host it? Do you see my messages?</dt><dd>No. There is nothing to host. The skills are text files your own coding agent reads on your machine.</dd></div>
+        <div><dt>Is it safe to let an agent read my messages?</dt><dd>Not entirely. A message can try to give your agent instructions. The skills tell it to ignore them, but nothing enforces that. Give it few tools and start with a dry run.</dd></div>
         <div><dt>Will my colleagues notice?</dt><dd>Eventually. That is how the episode ends, too.</dd></div>
         <div><dt>Will I get fired?</dt><dd>The licence says &ldquo;without warranty of any kind&rdquo;. That covers your job.</dd></div>
       </dl>
@@ -251,7 +269,7 @@ body { background:var(--color-ground); color:var(--color-text); font:500 var(--t
 
 <footer class="foot">
   <div class="wrap">
-    <p class="legal">MIT licence. A fan joke. Not affiliated with or endorsed by Rockstar Games, Take-Two Interactive, any cartoon, or your employer. Grand Theft Auto and GTA are trademarks of their owner.</p>
+    <p class="legal">MIT licence. A fan joke. Not affiliated with or endorsed by Rockstar Games, Take-Two Interactive, Slack, Microsoft, Google, any cartoon, or your employer. Grand Theft Auto and GTA are trademarks of their owner.</p>
   </div>
 </footer>
 

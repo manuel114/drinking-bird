@@ -1,0 +1,14 @@
+{
+  "name": "drinking-bird",
+  "description": "Drinking Bird: skills that cover your Slack, email and Teams on GTA VI launch day.",
+  "owner": {
+    "name": "manuel114"
+  },
+  "plugins": [
+    {
+      "name": "drinking-bird",
+      "source": "./",
+      "description": "Skills that let your coding agent cover your Slack, email and Teams with holding replies on GTA VI launch day."
+    }
+  ]
+}
